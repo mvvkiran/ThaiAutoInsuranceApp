@@ -20,6 +20,10 @@ spring:
     baseline-on-migrate: true
     locations: classpath:db/migration
   
+  sql:
+    init:
+      mode: never
+  
   security:
     require-ssl: false
 

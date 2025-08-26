@@ -11,6 +11,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @Order(1) // Execute first
 public class DataInitializer implements CommandLineRunner {
@@ -25,25 +27,11 @@ public class DataInitializer implements CommandLineRunner {
     
     @Override
     public void run(String... args) throws Exception {
-        logger.info("=== STARTING DEFAULT USERS INITIALIZATION ===");
+        logger.info("=== STARTING USER INITIALIZATION ===");
         
         try {
-            // Create Admin User
-            createAdminUser();
-            
-            // Create Agent User
-            createAgentUser();
-            
-            // Create Customer User
-            createCustomerUser();
-            
-            // Create Underwriter User
-            createUnderwriterUser();
-            
-            // Create Claims Adjuster User
-            createClaimsAdjusterUser();
-            
-            logger.info("=== DEFAULT USERS INITIALIZATION COMPLETED SUCCESSFULLY ===");
+            // Check for missing users and create only if they don't exist
+            createMissingUsers();
             
         } catch (Exception e) {
             logger.error("=== ERROR DURING USER INITIALIZATION ===", e);
@@ -51,18 +39,75 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
     
+    private void createMissingUsers() {
+        logger.info("Checking for missing users and creating only if needed...");
+        
+        // Check for admin user - look for both email and username to avoid conflicts
+        boolean adminExists = userRepository.findByEmail("admin@insurance.com").isPresent() 
+                             || userRepository.findByUsername("admin").isPresent();
+        
+        if (!adminExists) {
+            logger.info("Admin user not found, creating...");
+            createAdminUser();
+        } else {
+            logger.info("Admin user already exists (checking email admin@insurance.com and username 'admin'), updating if needed...");
+            updateExistingAdminUser();
+        }
+        
+        if (!userRepository.findByEmail("agent@insurance.com").isPresent()) {
+            logger.info("Agent user not found, creating...");
+            createAgentUser();
+        } else {
+            logger.info("Agent user already exists, skipping creation");
+        }
+        
+        // Create other users as needed
+        if (!userRepository.findByEmail("customer@insurance.com").isPresent()) {
+            logger.info("Customer user not found, creating...");
+            createCustomerUser();
+        }
+        
+        logger.info("User creation check completed");
+    }
+    
+    private void updateExistingAdminUser() {
+        // Check if there's an existing admin user with username "admin" but wrong email
+        Optional<User> existingAdmin = userRepository.findByUsername("admin");
+        
+        if (existingAdmin.isPresent()) {
+            User admin = existingAdmin.get();
+            logger.info("Found existing admin user with username 'admin' and email '{}', updating...", admin.getEmail());
+            
+            // Update the admin user with correct credentials
+            admin.setEmail("admin@insurance.com");
+            String encodedPassword = passwordEncoder.encode("Admin@123");
+            admin.setPassword(encodedPassword);
+            admin.setFirstName("System");
+            admin.setLastName("Administrator");
+            admin.setPhoneNumber("0812345678");
+            admin.setRole(Role.ADMIN);
+            admin.setIsActive(true);
+            admin.setEmailVerified(true);
+            admin.setPhoneVerified(true);
+            admin.setFailedLoginAttempts(0);
+            admin.setAccountLocked(false);
+            admin.setPasswordChangeRequired(false);
+            
+            User savedUser = userRepository.save(admin);
+            
+            // Verify the updated user
+            boolean passwordMatches = passwordEncoder.matches("Admin@123", savedUser.getPassword());
+            logger.info("✅ Admin user updated successfully: {} (ID: {}, Role: {}, PasswordMatches: {})", 
+                       "admin@insurance.com", savedUser.getId(), savedUser.getRole(), passwordMatches);
+        }
+    }
+
     private void createAdminUser() {
         String adminEmail = "admin@insurance.com";
-        logger.info("Creating admin user with email: {}", adminEmail);
-        
-        // Always recreate admin user to ensure it's correct
-        userRepository.findByEmail(adminEmail).ifPresent(user -> {
-            userRepository.delete(user);
-            logger.info("Deleted existing admin user for recreation");
-        });
+        logger.info("Creating new admin user with email: {}", adminEmail);
         
         User admin = new User();
-        admin.setUsername("admin");
+        admin.setUsername("insurance_admin"); // Use different username to avoid conflicts
         admin.setEmail(adminEmail);
         String encodedPassword = passwordEncoder.encode("Admin@123");
         admin.setPassword(encodedPassword);

@@ -171,8 +171,8 @@ export class AppComponent implements OnInit, OnDestroy {
       { route: '/dashboard', icon: 'dashboard', labelKey: 'navigation.dashboard', requiresAuth: true },
       { route: '/policies', icon: 'description', labelKey: 'navigation.policies', requiresAuth: true },
       { route: '/claims', icon: 'assignment', labelKey: 'navigation.claims', requiresAuth: true },
-      { route: '/profile', icon: 'person', labelKey: 'navigation.profile', requiresAuth: true },
-      { route: '/admin', icon: 'admin_panel_settings', labelKey: 'navigation.admin', requiresAuth: true }
+      { route: '/profile', icon: 'person', labelKey: 'navigation.profile', requiresAuth: true }
+      // Admin link is shown separately in the admin section below
     ];
   }
 

@@ -116,12 +116,17 @@ Once the application is running, access the API documentation at:
 
 The application comes with pre-configured test users:
 
-| Username | Password | Role | Description |
-|----------|----------|------|-------------|
-| admin | password123 | ADMIN | System administrator |
-| agent1 | password123 | AGENT | Insurance agent |
-| adjuster1 | password123 | CLAIMS_ADJUSTER | Claims adjuster |
-| customer1 | password123 | CUSTOMER | Sample customer |
+| Email | Password | Role | Description |
+|-------|----------|------|-------------|
+| admin@insurance.com | Admin@123 | ADMIN | System administrator |
+| agent@insurance.com | agent123 | AGENT | Insurance agent |
+| customer@insurance.com | customer123 | CUSTOMER | Sample customer |
+| admin@thaiinsurance.com | password123 | ADMIN | Legacy admin (from Flyway) |
+| agent1@thaiinsurance.com | password123 | AGENT | Legacy agent (from Flyway) |
+| adjuster1@thaiinsurance.com | password123 | CLAIMS_ADJUSTER | Claims adjuster (from Flyway) |
+| customer1@email.com | password123 | CUSTOMER | Legacy customer (from Flyway) |
+
+**Recommended login credentials:** Use `admin@insurance.com/Admin@123` for admin access.
 
 ## API Endpoints
 

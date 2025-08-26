@@ -221,14 +221,25 @@ export class AuthService {
     // Calculate expiration date from duration
     const expiresAt = new Date(Date.now() + expiresIn);
     
+    // Transform user object to match frontend expectations
+    const transformedUser: User = {
+      ...user,
+      id: user.id.toString(), // Backend returns number, frontend expects string
+      role: (user as any).roles?.[0] || user.role, // Use first role from roles array
+      dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : undefined,
+      createdAt: user.createdAt ? new Date(user.createdAt) : undefined,
+      updatedAt: user.updatedAt ? new Date(user.updatedAt) : undefined,
+      lastLoginAt: user.lastLoginAt ? new Date(user.lastLoginAt) : undefined
+    };
+    
     // Store tokens
     localStorage.setItem(environment.storage.tokenKey, accessToken);
     localStorage.setItem(`${environment.storage.tokenKey}_refresh`, refreshToken);
-    localStorage.setItem(environment.storage.userKey, JSON.stringify(user));
+    localStorage.setItem(environment.storage.userKey, JSON.stringify(transformedUser));
     localStorage.setItem(`${environment.storage.tokenKey}_expires`, expiresAt.toString());
     
     // Update current user
-    this.currentUserSubject.next(user);
+    this.currentUserSubject.next(transformedUser);
     
     // Set token expiration timer
     this.setTokenExpirationTimer(expiresAt);
@@ -251,9 +262,16 @@ export class AuthService {
         const user = JSON.parse(userJson) as User;
         const expiresAt = new Date(expiresAtStr);
 
+        // Transform user object in case it's from an old session format
+        const transformedUser: User = {
+          ...user,
+          id: user.id?.toString() || user.id, // Ensure id is string
+          role: (user as any).roles?.[0] || user.role // Use first role from roles array
+        };
+
         // Check if token is still valid
         if (expiresAt > new Date()) {
-          this.currentUserSubject.next(user);
+          this.currentUserSubject.next(transformedUser);
           this.setTokenExpirationTimer(expiresAt);
         } else {
           // Token expired, try to refresh

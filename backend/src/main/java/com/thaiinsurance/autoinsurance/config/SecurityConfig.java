@@ -72,6 +72,9 @@ public class SecurityConfig {
                 .requestMatchers("/public/**").permitAll()
                 .requestMatchers("/health/**").permitAll()
                 
+                // Test endpoints (for development/debugging)
+                .requestMatchers("/api/test/**").permitAll()
+                
                 // Swagger/OpenAPI endpoints
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/swagger-ui.html").permitAll()
