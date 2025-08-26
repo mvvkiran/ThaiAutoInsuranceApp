@@ -25,7 +25,18 @@
     "no": "No",
     "ok": "OK",
     "confirm": "Confirm",
-    "none": "None"
+    "none": "None",
+    "all": "All",
+    "active": "Active",
+    "inactive": "Inactive",
+    "id": "ID",
+    "name": "Name",
+    "role": "Role",
+    "status": "Status",
+    "created": "Created",
+    "actions": "Actions",
+    "view": "View",
+    "refresh": "Refresh"
   },
   "navigation": {
     "home": "Home",
@@ -251,5 +262,80 @@
     "notifications": "Notifications",
     "quickActions": "Quick Actions",
     "recentActivity": "Recent Activity"
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Dashboard",
+      "subtitle": "System overview and management portal",
+      "totalUsers": "Total Users",
+      "totalCustomers": "Total Customers", 
+      "totalPolicies": "Total Policies",
+      "totalRevenue": "Total Revenue",
+      "quickActions": "Quick Actions",
+      "recentUsers": "Recent Users",
+      "recentCustomers": "Recent Customers",
+      "systemStatus": "System Status",
+      "lastUpdated": "Last Updated"
+    },
+    "actions": {
+      "viewAllUsers": "View All Users",
+      "viewAllCustomers": "View All Customers",
+      "viewAllPolicies": "View All Policies",
+      "refreshData": "Refresh Data",
+      "viewAll": "View All"
+    },
+    "status": {
+      "apiService": "API Service",
+      "database": "Database",
+      "authentication": "Authentication"
+    },
+    "users": {
+      "title": "User Management",
+      "subtitle": "Manage system users and their permissions",
+      "userList": "User List",
+      "total": "total",
+      "searchPlaceholder": "Search by name, email, or username...",
+      "noUsers": "No users found",
+      "noUsersMessage": "No users match your search criteria or none have been created yet.",
+      "emailVerified": "Email verified",
+      "activate": "Activate",
+      "deactivate": "Deactivate",
+      "addUser": "Add User"
+    },
+    "customers": {
+      "title": "Customer Management", 
+      "subtitle": "Manage customer accounts and information",
+      "customerList": "Customer List",
+      "total": "total",
+      "totalCustomers": "Total Customers",
+      "searchPlaceholder": "Search by name, email, phone, or ID...",
+      "noCustomers": "No customers found",
+      "noCustomersMessage": "No customers match your search criteria or none have been registered yet.",
+      "contact": "Contact Info",
+      "age": "Age",
+      "policies": "Policies",
+      "active": "Active",
+      "totalOf": "Total:",
+      "viewPolicies": "View Policies",
+      "viewClaims": "View Claims"
+    },
+    "policies": {
+      "title": "Policy Management",
+      "subtitle": "Manage insurance policies and coverage",
+      "policyList": "Policy List", 
+      "total": "total",
+      "totalPolicies": "Total Policies",
+      "activePolicies": "Active Policies",
+      "totalPremium": "Total Premium",
+      "searchPlaceholder": "Search by policy number, customer name, or vehicle...",
+      "noPolicies": "No policies found",
+      "noPoliciesMessage": "No policies match your search criteria or none have been created yet.",
+      "customer": "Customer",
+      "coverage": "Coverage Period",
+      "download": "Download Policy",
+      "viewClaims": "View Claims",
+      "renew": "Renew Policy",
+      "cancel": "Cancel Policy"
+    }
   }
 }

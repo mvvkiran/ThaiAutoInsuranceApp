@@ -24,7 +24,19 @@
     "yes": "ใช่",
     "no": "ไม่",
     "ok": "ตกลง",
-    "confirm": "ยืนยัน"
+    "confirm": "ยืนยัน",
+    "none": "ไม่มี",
+    "all": "ทั้งหมด",
+    "active": "ใช้งาน",
+    "inactive": "ไม่ใช้งาน",
+    "id": "รหัส",
+    "name": "ชื่อ",
+    "role": "บทบาท",
+    "status": "สถานะ",
+    "created": "สร้างเมื่อ",
+    "actions": "การจัดการ",
+    "view": "ดู",
+    "refresh": "รีเฟรช"
   },
   "navigation": {
     "home": "หน้าแรก",
@@ -229,5 +241,80 @@
     "notifications": "การแจ้งเตือน",
     "quickActions": "การดำเนินการด่วน",
     "recentActivity": "กิจกรรมล่าสุด"
+  },
+  "admin": {
+    "dashboard": {
+      "title": "แดชบอร์ดผู้ดูแลระบบ",
+      "subtitle": "ภาพรวมระบบและพอร์ทัลจัดการ",
+      "totalUsers": "ผู้ใช้ทั้งหมด",
+      "totalCustomers": "ลูกค้าทั้งหมด",
+      "totalPolicies": "กรมธรรม์ทั้งหมด", 
+      "totalRevenue": "รายได้ทั้งหมด",
+      "quickActions": "การดำเนินการด่วน",
+      "recentUsers": "ผู้ใช้ล่าสุด",
+      "recentCustomers": "ลูกค้าล่าสุด",
+      "systemStatus": "สถานะระบบ",
+      "lastUpdated": "อัปเดตล่าสุด"
+    },
+    "actions": {
+      "viewAllUsers": "ดูผู้ใช้ทั้งหมด",
+      "viewAllCustomers": "ดูลูกค้าทั้งหมด", 
+      "viewAllPolicies": "ดูกรมธรรม์ทั้งหมด",
+      "refreshData": "รีเฟรชข้อมูล",
+      "viewAll": "ดูทั้งหมด"
+    },
+    "status": {
+      "apiService": "บริการ API",
+      "database": "ฐานข้อมูล",
+      "authentication": "ระบบยืนยันตัวตน"
+    },
+    "users": {
+      "title": "จัดการผู้ใช้",
+      "subtitle": "จัดการบัญชีผู้ใช้และสิทธิ์การเข้าถึง",
+      "userList": "รายชื่อผู้ใช้",
+      "total": "ทั้งหมด",
+      "searchPlaceholder": "ค้นหาด้วยชื่อ อีเมล หรือชื่อผู้ใช้...",
+      "noUsers": "ไม่พบผู้ใช้",
+      "noUsersMessage": "ไม่มีผู้ใช้ที่ตรงกับเงื่อนไขการค้นหาหรือยังไม่ได้สร้าง",
+      "emailVerified": "อีเมลได้รับการยืนยัน",
+      "activate": "เปิดใช้งาน",
+      "deactivate": "ปิดใช้งาน",
+      "addUser": "เพิ่มผู้ใช้"
+    },
+    "customers": {
+      "title": "จัดการลูกค้า", 
+      "subtitle": "จัดการบัญชีลูกค้าและข้อมูลส่วนตัว",
+      "customerList": "รายชื่อลูกค้า",
+      "total": "ทั้งหมด",
+      "totalCustomers": "ลูกค้าทั้งหมด",
+      "searchPlaceholder": "ค้นหาด้วยชื่อ อีเมล เบอร์โทร หรือเลขบัตรประชาชน...",
+      "noCustomers": "ไม่พบลูกค้า",
+      "noCustomersMessage": "ไม่มีลูกค้าที่ตรงกับเงื่อนไขการค้นหาหรือยังไม่ได้ลงทะเบียน",
+      "contact": "ข้อมูลติดต่อ",
+      "age": "อายุ",
+      "policies": "กรมธรรม์",
+      "active": "ใช้งาน",
+      "totalOf": "รวม:",
+      "viewPolicies": "ดูกรมธรรม์",
+      "viewClaims": "ดูเคลม"
+    },
+    "policies": {
+      "title": "จัดการกรมธรรม์",
+      "subtitle": "จัดการกรมธรรม์ประกันภัยและความคุ้มครอง",
+      "policyList": "รายการกรมธรรม์", 
+      "total": "ทั้งหมด",
+      "totalPolicies": "กรมธรรม์ทั้งหมด",
+      "activePolicies": "กรมธรรม์ที่ใช้งาน",
+      "totalPremium": "เบี้ยประกันทั้งหมด",
+      "searchPlaceholder": "ค้นหาด้วยเลขกรมธรรม์ ชื่อลูกค้า หรือทะเบียนรถ...",
+      "noPolicies": "ไม่พบกรมธรรม์",
+      "noPoliciesMessage": "ไม่มีกรมธรรม์ที่ตรงกับเงื่อนไขการค้นหาหรือยังไม่ได้สร้าง",
+      "customer": "ลูกค้า",
+      "coverage": "ระยะเวลาความคุ้มครอง",
+      "download": "ดาวน์โหลดกรมธรรม์",
+      "viewClaims": "ดูเคลม",
+      "renew": "ต่ออายุกรมธรรม์",
+      "cancel": "ยกเลิกกรมธรรม์"
+    }
   }
 }

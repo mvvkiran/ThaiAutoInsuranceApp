@@ -17,6 +17,7 @@ com/thaiinsurance/autoinsurance/model/ClaimDocument$DocumentType.class
 com/thaiinsurance/autoinsurance/dto/PolicyQuoteResponse.class
 com/thaiinsurance/autoinsurance/model/User.class
 com/thaiinsurance/autoinsurance/model/Vehicle$UsageType.class
+com/thaiinsurance/autoinsurance/config/DataInitializer.class
 com/thaiinsurance/autoinsurance/dto/PaymentRequest.class
 com/thaiinsurance/autoinsurance/controller/HealthController.class
 com/thaiinsurance/autoinsurance/service/PaymentService$PaymentReport.class
@@ -50,7 +51,6 @@ com/thaiinsurance/autoinsurance/controller/VehicleController.class
 com/thaiinsurance/autoinsurance/config/OpenApiConfig.class
 com/thaiinsurance/autoinsurance/model/BaseEntity.class
 com/thaiinsurance/autoinsurance/controller/AuthController.class
-com/thaiinsurance/autoinsurance/controller/AdminController.class
 com/thaiinsurance/autoinsurance/dto/ClaimSubmissionRequest.class
 com/thaiinsurance/autoinsurance/security/CustomUserDetailsService.class
 com/thaiinsurance/autoinsurance/dto/auth/LoginResponse.class
@@ -73,6 +73,7 @@ com/thaiinsurance/autoinsurance/util/NumberGeneratorUtil.class
 com/thaiinsurance/autoinsurance/repository/BaseRepository.class
 com/thaiinsurance/autoinsurance/controller/ReportController.class
 com/thaiinsurance/autoinsurance/controller/CustomerController$CustomerWithUserRequest.class
+com/thaiinsurance/autoinsurance/controller/TestController.class
 com/thaiinsurance/autoinsurance/controller/AuthController$ForgotPasswordRequest.class
 com/thaiinsurance/autoinsurance/controller/PolicyController$CoverageReport.class
 com/thaiinsurance/autoinsurance/controller/AuthController$ChangePasswordRequest.class
@@ -90,9 +91,9 @@ com/thaiinsurance/autoinsurance/model/Vehicle.class
 com/thaiinsurance/autoinsurance/service/ClaimService.class
 com/thaiinsurance/autoinsurance/repository/ClaimRepository.class
 com/thaiinsurance/autoinsurance/service/NotificationService.class
-com/thaiinsurance/autoinsurance/service/AdminService.class
 com/thaiinsurance/autoinsurance/controller/ReportController$ExportResult.class
 com/thaiinsurance/autoinsurance/controller/PaymentController.class
+com/thaiinsurance/autoinsurance/util/UserCreationVerifier.class
 com/thaiinsurance/autoinsurance/controller/ClaimController.class
 com/thaiinsurance/autoinsurance/repository/CustomerRepository.class
 com/thaiinsurance/autoinsurance/model/Customer.class

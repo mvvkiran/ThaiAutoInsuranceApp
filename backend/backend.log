@@ -1,1 +1,1324 @@
-nohup: ./mvnw: No such file or directory
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/opt/homebrew/Cellar/maven/3.9.11/libexec/lib/guice-5.1.0-classes.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------< com.thaiinsurance:auto-insurance-backend >--------------
+[INFO] Building Thai Auto Insurance Backend 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.2.0:run (default-cli) > test-compile @ auto-insurance-backend >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ auto-insurance-backend ---
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ auto-insurance-backend ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ auto-insurance-backend ---
+[INFO] Copying 2 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ auto-insurance-backend ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] <<< spring-boot:3.2.0:run (default-cli) < test-compile @ auto-insurance-backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.2.0:run (default-cli) @ auto-insurance-backend ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+[32m :: Spring Boot :: [39m              [2m (v3.2.0)[0;39m
+
+2025-08-26 23:30:32 [main] INFO  c.t.a.ThaiAutoInsuranceApplication - Starting ThaiAutoInsuranceApplication using Java 24.0.2 with PID 49335 (/Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/target/classes started by mvvkiran in /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend)
+2025-08-26 23:30:32 [main] DEBUG c.t.a.ThaiAutoInsuranceApplication - Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-08-26 23:30:32 [main] INFO  c.t.a.ThaiAutoInsuranceApplication - The following 1 profile is active: "dev"
+2025-08-26 23:30:32 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-26 23:30:32 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 19 ms. Found 6 JPA repository interfaces.
+WARNING: A restricted method in java.lang.System has been called
+WARNING: java.lang.System::load has been called by org.apache.tomcat.jni.Library in an unnamed module (file:/Users/mvvkiran/.m2/repository/org/apache/tomcat/embed/tomcat-embed-core/10.1.16/tomcat-embed-core-10.1.16.jar)
+WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for callers in this module
+WARNING: Restricted methods will be blocked in a future release unless native access is enabled
+
+2025-08-26 23:30:32 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2025-08-26 23:30:32 [main] INFO  o.a.catalina.core.StandardService - Starting service [Tomcat]
+2025-08-26 23:30:32 [main] INFO  o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.16]
+2025-08-26 23:30:32 [main] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2025-08-26 23:30:32 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 607 ms
+2025-08-26 23:30:33 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2025-08-26 23:30:33 [main] INFO  com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:thai_auto_insurance_dev user=SA
+2025-08-26 23:30:33 [main] INFO  com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2025-08-26 23:30:33 [main] INFO  o.s.b.a.h.H2ConsoleAutoConfiguration - H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:thai_auto_insurance_dev'
+2025-08-26 23:30:33 [main] INFO  o.f.c.i.license.VersionPrinter - Flyway Community Edition 9.22.3 by Redgate
+2025-08-26 23:30:33 [main] INFO  o.f.c.i.license.VersionPrinter - See release notes here: https://rd.gt/416ObMi
+2025-08-26 23:30:33 [main] INFO  o.f.c.i.license.VersionPrinter - 
+2025-08-26 23:30:33 [main] INFO  org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:thai_auto_insurance_dev (H2 2.2)
+2025-08-26 23:30:33 [main] WARN  o.f.c.i.database.base.Database - Flyway upgrade recommended: H2 2.2.224 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.220.
+2025-08-26 23:30:33 [main] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "PUBLIC"."flyway_schema_history" does not exist yet
+2025-08-26 23:30:33 [main] INFO  o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.004s)
+2025-08-26 23:30:33 [main] INFO  o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "PUBLIC"."flyway_schema_history" ...
+2025-08-26 23:30:33 [main] INFO  o.f.core.internal.command.DbMigrate - Current version of schema "PUBLIC": << Empty Schema >>
+2025-08-26 23:30:33 [main] INFO  o.f.core.internal.command.DbMigrate - Migrating schema "PUBLIC" to version "1 - Initial Schema"
+2025-08-26 23:30:33 [main] INFO  o.f.core.internal.command.DbMigrate - Migrating schema "PUBLIC" to version "2 - Initial Data"
+2025-08-26 23:30:33 [main] INFO  o.f.core.internal.command.DbMigrate - Migrating schema "PUBLIC" to version "3 - Add Missing Customer Columns"
+2025-08-26 23:30:33 [main] INFO  o.f.core.internal.command.DbMigrate - Migrating schema "PUBLIC" to version "4 - Add Missing Vehicle Columns"
+2025-08-26 23:30:33 [main] INFO  o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "PUBLIC", now at version v4 (execution time 00:00.036s)
+2025-08-26 23:30:33 [main] INFO  o.h.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-26 23:30:33 [main] INFO  org.hibernate.Version - HHH000412: Hibernate ORM core version 6.3.1.Final
+2025-08-26 23:30:33 [main] INFO  o.h.c.i.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2025-08-26 23:30:33 [main] INFO  o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-26 23:30:33 [main] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-26 23:30:33 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-26 23:30:33 [main] INFO  o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-08-26 23:30:34 [main] DEBUG c.t.a.s.JwtAuthenticationFilter - Filter 'jwtAuthenticationFilter' configured for use
+2025-08-26 23:30:34 [main] DEBUG o.s.w.f.ServerHttpObservationFilter - Filter 'webMvcObservationFilter' configured for use
+2025-08-26 23:30:34 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-26 23:30:34 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - 122 mappings in 'requestMappingHandlerMapping'
+2025-08-26 23:30:34 [main] DEBUG o.s.w.s.h.SimpleUrlHandlerMapping - Patterns [/webjars/**, /**, /swagger-ui*/*swagger-initializer.js, /swagger-ui*/**] in 'resourceHandlerMapping'
+2025-08-26 23:30:34 [main] INFO  o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoint(s) beneath base path '/actuator'
+2025-08-26 23:30:34 [main] INFO  o.s.s.web.DefaultSecurityFilterChain - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6e432c80, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@60cb502a, org.springframework.security.web.context.SecurityContextHolderFilter@551e7852, org.springframework.security.web.header.HeaderWriterFilter@261ddbf5, org.springframework.web.filter.CorsFilter@59f3c17e, org.springframework.security.web.authentication.logout.LogoutFilter@4186a8f3, com.thaiinsurance.autoinsurance.security.JwtAuthenticationFilter@599f0fab, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@2990495d, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5c4f1961, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@79c1301b, org.springframework.security.web.session.SessionManagementFilter@bb3b9e5, org.springframework.security.web.access.ExceptionTranslationFilter@cb42dee, org.springframework.security.web.access.intercept.AuthorizationFilter@70e1a8ab]
+2025-08-26 23:30:34 [main] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter - ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-08-26 23:30:34 [main] DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-08-26 23:30:35 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path ''
+2025-08-26 23:30:35 [main] INFO  c.t.a.ThaiAutoInsuranceApplication - Started ThaiAutoInsuranceApplication in 2.805 seconds (process running for 2.901)
+2025-08-26 23:30:35 [main] INFO  c.t.a.config.DataInitializer - === STARTING USER INITIALIZATION ===
+2025-08-26 23:30:35 [main] INFO  c.t.a.config.DataInitializer - Checking for missing users and creating only if needed...
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-08-26 23:30:35 [main] INFO  c.t.a.config.DataInitializer - Admin user already exists (checking email admin@insurance.com and username 'admin'), updating if needed...
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-08-26 23:30:35 [main] INFO  c.t.a.config.DataInitializer - Found existing admin user with username 'admin' and email 'admin@thaiinsurance.com', updating...
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+Hibernate: 
+    select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* update
+        for com.thaiinsurance.autoinsurance.model.User */update users 
+    set
+        account_locked=?,
+        account_locked_at=?,
+        email=?,
+        email_verification_token=?,
+        email_verified=?,
+        failed_login_attempts=?,
+        first_name=?,
+        is_active=?,
+        last_login=?,
+        last_name=?,
+        password=?,
+        password_change_required=?,
+        password_changed_at=?,
+        password_reset_token=?,
+        password_reset_token_expiry=?,
+        phone_number=?,
+        phone_verified=?,
+        role=?,
+        updated_at=?,
+        username=?,
+        version=? 
+    where
+        id=? 
+        and version=?
+Hibernate: 
+    /* update
+        for com.thaiinsurance.autoinsurance.model.User */update users 
+    set
+        account_locked=?,
+        account_locked_at=?,
+        email=?,
+        email_verification_token=?,
+        email_verified=?,
+        failed_login_attempts=?,
+        first_name=?,
+        is_active=?,
+        last_login=?,
+        last_name=?,
+        password=?,
+        password_change_required=?,
+        password_changed_at=?,
+        password_reset_token=?,
+        password_reset_token_expiry=?,
+        phone_number=?,
+        phone_verified=?,
+        role=?,
+        updated_at=?,
+        username=?,
+        version=? 
+    where
+        id=? 
+        and version=?
+2025-08-26 23:30:35 [main] INFO  c.t.a.config.DataInitializer - ✅ Admin user updated successfully: admin@insurance.com (ID: 1, Role: ADMIN, PasswordMatches: true)
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2025-08-26 23:30:35 [main] INFO  c.t.a.config.DataInitializer - Agent user not found, creating...
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.email=? 
+    fetch
+        first ? rows only
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.email=? 
+    fetch
+        first ? rows only
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* insert for
+        com.thaiinsurance.autoinsurance.model.User */insert 
+    into
+        users (account_locked, account_locked_at, created_at, email, email_verification_token, email_verified, failed_login_attempts, first_name, is_active, last_login, last_name, password, password_change_required, password_changed_at, password_reset_token, password_reset_token_expiry, phone_number, phone_verified, role, updated_at, username, version, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    /* insert for
+        com.thaiinsurance.autoinsurance.model.User */insert 
+    into
+        users (account_locked, account_locked_at, created_at, email, email_verification_token, email_verified, failed_login_attempts, first_name, is_active, last_login, last_name, password, password_change_required, password_changed_at, password_reset_token, password_reset_token_expiry, phone_number, phone_verified, role, updated_at, username, version, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+2025-08-26 23:30:35 [main] INFO  c.t.a.config.DataInitializer - Agent user created: agent@insurance.com
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2025-08-26 23:30:35 [main] INFO  c.t.a.config.DataInitializer - Customer user not found, creating...
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.email=? 
+    fetch
+        first ? rows only
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id 
+    from
+        users u1_0 
+    where
+        u1_0.email=? 
+    fetch
+        first ? rows only
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* insert for
+        com.thaiinsurance.autoinsurance.model.User */insert 
+    into
+        users (account_locked, account_locked_at, created_at, email, email_verification_token, email_verified, failed_login_attempts, first_name, is_active, last_login, last_name, password, password_change_required, password_changed_at, password_reset_token, password_reset_token_expiry, phone_number, phone_verified, role, updated_at, username, version, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    /* insert for
+        com.thaiinsurance.autoinsurance.model.User */insert 
+    into
+        users (account_locked, account_locked_at, created_at, email, email_verification_token, email_verified, failed_login_attempts, first_name, is_active, last_login, last_name, password, password_change_required, password_changed_at, password_reset_token, password_reset_token_expiry, phone_number, phone_verified, role, updated_at, username, version, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+2025-08-26 23:30:35 [main] INFO  c.t.a.config.DataInitializer - Customer user created: customer@insurance.com
+2025-08-26 23:30:35 [main] INFO  c.t.a.config.DataInitializer - User creation check completed
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier - === VERIFYING USER CREATION ===
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier - ✅ User found: admin@insurance.com (Role: ADMIN, Active: true)
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Password verification: ✅ MATCHES
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Role verification: ✅ MATCHES (Expected: ADMIN, Actual: ADMIN)
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Roles Set: [ADMIN] (Size: 1)
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Contains expected role: true
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier - ✅ User found: agent@insurance.com (Role: AGENT, Active: true)
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Password verification: ✅ MATCHES
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Role verification: ✅ MATCHES (Expected: AGENT, Actual: AGENT)
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Roles Set: [AGENT] (Size: 1)
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Contains expected role: true
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier - ✅ User found: customer@insurance.com (Role: CUSTOMER, Active: true)
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Password verification: ✅ MATCHES
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Role verification: ✅ MATCHES (Expected: CUSTOMER, Actual: CUSTOMER)
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Roles Set: [CUSTOMER] (Size: 1)
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier -    Contains expected role: true
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2025-08-26 23:30:35 [main] ERROR c.t.a.util.UserCreationVerifier - ❌ User NOT found: underwriter@insurance.com
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2025-08-26 23:30:35 [main] ERROR c.t.a.util.UserCreationVerifier - ❌ User NOT found: adjuster@insurance.com
+2025-08-26 23:30:35 [main] INFO  c.t.a.util.UserCreationVerifier - === USER VERIFICATION COMPLETE ===
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+Hibernate: 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.account_locked,
+        u1_0.account_locked_at,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verification_token,
+        u1_0.email_verified,
+        u1_0.failed_login_attempts,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password,
+        u1_0.password_change_required,
+        u1_0.password_changed_at,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expiry,
+        u1_0.phone_number,
+        u1_0.phone_verified,
+        u1_0.role,
+        u1_0.updated_at,
+        u1_0.username,
+        u1_0.version 
+    from
+        users u1_0 
+    where
+        u1_0.username=?
+2025-08-26 23:30:35 [main] DEBUG org.hibernate.SQL - 
+    /* insert for
+        com.thaiinsurance.autoinsurance.model.Customer */insert 
+    into
+        customers (address, address_line1, address_line2, amphoe, country, created_at, date_of_birth, district, email, first_name, first_name_en, first_name_thai, gender, is_active, kyc_status, kyc_verified_at, last_name, last_name_en, last_name_thai, monthly_income, national_id, occupation_category, occupation_detail, phone_number, postal_code, preferred_language, province, tambon, updated_at, user_id, version, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+Hibernate: 
+    /* insert for
+        com.thaiinsurance.autoinsurance.model.Customer */insert 
+    into
+        customers (address, address_line1, address_line2, amphoe, country, created_at, date_of_birth, district, email, first_name, first_name_en, first_name_thai, gender, is_active, kyc_status, kyc_verified_at, last_name, last_name_en, last_name_thai, monthly_income, national_id, occupation_category, occupation_detail, phone_number, postal_code, preferred_language, province, tambon, updated_at, user_id, version, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, default)
+2025-08-26 23:30:35 [main] WARN  o.h.e.jdbc.spi.SqlExceptionHelper - SQL Error: 23505, SQLState: 23505
+2025-08-26 23:30:35 [main] ERROR o.h.e.jdbc.spi.SqlExceptionHelper - Unique index or primary key violation: "PUBLIC.CONSTRAINT_62_INDEX_9 ON PUBLIC.CUSTOMERS(NATIONAL_ID NULLS FIRST) VALUES ( /* 1 */ '1234567890123' )"; SQL statement:
+/* insert for com.thaiinsurance.autoinsurance.model.Customer */insert into customers (address,address_line1,address_line2,amphoe,country,created_at,date_of_birth,district,email,first_name,first_name_en,first_name_thai,gender,is_active,kyc_status,kyc_verified_at,last_name,last_name_en,last_name_thai,monthly_income,national_id,occupation_category,occupation_detail,phone_number,postal_code,preferred_language,province,tambon,updated_at,user_id,version,id) values (?,?,?,? [23505-224]
+⚠️ Sample data creation failed (this is normal if repositories are not fully implemented): could not execute statement [Unique index or primary key violation: "PUBLIC.CONSTRAINT_62_INDEX_9 ON PUBLIC.CUSTOMERS(NATIONAL_ID NULLS FIRST) VALUES ( /* 1 */ '1234567890123' )"; SQL statement:
+/* insert for com.thaiinsurance.autoinsurance.model.Customer */insert into customers (address,address_line1,address_line2,amphoe,country,created_at,date_of_birth,district,email,first_name,first_name_en,first_name_thai,gender,is_active,kyc_status,kyc_verified_at,last_name,last_name_en,last_name_thai,monthly_income,national_id,occupation_category,occupation_detail,phone_number,postal_code,preferred_language,province,tambon,updated_at,user_id,version,id) values (?,?,?,? [23505-224]] [/* insert for com.thaiinsurance.autoinsurance.model.Customer */insert into customers (address,address_line1,address_line2,amphoe,country,created_at,date_of_birth,district,email,first_name,first_name_en,first_name_thai,gender,is_active,kyc_status,kyc_verified_at,last_name,last_name_en,last_name_thai,monthly_income,national_id,occupation_category,occupation_detail,phone_number,postal_code,preferred_language,province,tambon,updated_at,user_id,version,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,default)]; SQL [/* insert for com.thaiinsurance.autoinsurance.model.Customer */insert into customers (address,address_line1,address_line2,amphoe,country,created_at,date_of_birth,district,email,first_name,first_name_en,first_name_thai,gender,is_active,kyc_status,kyc_verified_at,last_name,last_name_en,last_name_thai,monthly_income,national_id,occupation_category,occupation_detail,phone_number,postal_code,preferred_language,province,tambon,updated_at,user_id,version,id) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,default)]; constraint ["PUBLIC.CONSTRAINT_62_INDEX_9 ON PUBLIC.CUSTOMERS(NATIONAL_ID NULLS FIRST) VALUES ( /* 1 */ '1234567890123' )"; SQL statement:
+/* insert for com.thaiinsurance.autoinsurance.model.Customer */insert into customers (address,address_line1,address_line2,amphoe,country,created_at,date_of_birth,district,email,first_name,first_name_en,first_name_thai,gender,is_active,kyc_status,kyc_verified_at,last_name,last_name_en,last_name_thai,monthly_income,national_id,occupation_category,occupation_detail,phone_number,postal_code,preferred_language,province,tambon,updated_at,user_id,version,id) values (?,?,?,? [23505-224]]
+✅ Demo data initialization completed!
+2025-08-26 23:31:05 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-26 23:31:05 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected StandardServletMultipartResolver
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected AcceptHeaderLocaleResolver
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected FixedThemeResolver
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@8cd6635
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Detected org.springframework.web.servlet.support.SessionFlashMapManager@256a9a47
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-08-26 23:31:05 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet - Completed initialization in 1 ms
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /api/test/policies
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+2025-08-26 23:31:05 [http-nio-8080-exec-1] WARN  o.s.w.s.h.HandlerMappingIntrospector - Cache miss for REQUEST dispatch to '/api/test/policies' (previous null). Performing MatchableHandlerMapping lookup. This is logged once only at WARN level, and every time at TRACE.
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Secured GET /api/test/policies
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - GET "/api/test/policies", parameters={}
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped to com.thaiinsurance.autoinsurance.controller.TestController#testPolicies(int, int)
+2025-08-26 23:31:05 [http-nio-8080-exec-1] INFO  c.t.a.controller.TestController - Testing policies endpoint - page: 0, size: 10
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG org.hibernate.SQL - 
+    /* <criteria> */ select
+        p1_0.id,
+        p1_0.agent_id,
+        p1_0.agent_commission,
+        p1_0.cancellation_reason,
+        p1_0.cancelled_date,
+        p1_0.coverage_type,
+        p1_0.created_at,
+        p1_0.customer_id,
+        p1_0.deductible,
+        p1_0.discount_amount,
+        p1_0.discount_percentage,
+        p1_0.end_date,
+        p1_0.issued_date,
+        p1_0.policy_number,
+        p1_0.policy_type,
+        p1_0.premium_amount,
+        p1_0.remarks,
+        p1_0.start_date,
+        p1_0.status,
+        p1_0.sum_insured,
+        p1_0.tax_amount,
+        p1_0.total_amount,
+        p1_0.updated_at,
+        p1_0.vehicle_id,
+        p1_0.version 
+    from
+        policies p1_0 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+Hibernate: 
+    /* <criteria> */ select
+        p1_0.id,
+        p1_0.agent_id,
+        p1_0.agent_commission,
+        p1_0.cancellation_reason,
+        p1_0.cancelled_date,
+        p1_0.coverage_type,
+        p1_0.created_at,
+        p1_0.customer_id,
+        p1_0.deductible,
+        p1_0.discount_amount,
+        p1_0.discount_percentage,
+        p1_0.end_date,
+        p1_0.issued_date,
+        p1_0.policy_number,
+        p1_0.policy_type,
+        p1_0.premium_amount,
+        p1_0.remarks,
+        p1_0.start_date,
+        p1_0.status,
+        p1_0.sum_insured,
+        p1_0.tax_amount,
+        p1_0.total_amount,
+        p1_0.updated_at,
+        p1_0.vehicle_id,
+        p1_0.version 
+    from
+        policies p1_0 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+2025-08-26 23:31:05 [http-nio-8080-exec-1] INFO  c.t.a.controller.TestController - Found 1 policies, returning page 1/1
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Using 'application/json', given [*/*] and supported [application/json, application/*+json]
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.w.s.m.m.a.HttpEntityMethodProcessor - Writing [com.thaiinsurance.autoinsurance.dto.ApiResponse@27746705]
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.web.servlet.DispatcherServlet - Failed to complete request: jakarta.servlet.ServletException: Handler dispatch failed: java.lang.NoClassDefFoundError: javax/persistence/ElementCollection
+2025-08-26 23:31:05 [http-nio-8080-exec-1] ERROR o.a.c.c.C.[.[.[.[dispatcherServlet] - Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Handler dispatch failed: java.lang.NoClassDefFoundError: javax/persistence/ElementCollection] with root cause
+java.lang.ClassNotFoundException: javax.persistence.ElementCollection
+	at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:580)
+	at java.base/java.lang.ClassLoader.loadClass(ClassLoader.java:490)
+	at com.fasterxml.jackson.datatype.hibernate5.PersistentCollectionSerializer.usesLazyLoading(PersistentCollectionSerializer.java:346)
+	at com.fasterxml.jackson.datatype.hibernate5.PersistentCollectionSerializer.createContextual(PersistentCollectionSerializer.java:143)
+	at com.fasterxml.jackson.databind.SerializerProvider.handlePrimaryContextualization(SerializerProvider.java:1093)
+	at com.fasterxml.jackson.databind.SerializerProvider.findPrimaryPropertySerializer(SerializerProvider.java:698)
+	at com.fasterxml.jackson.databind.ser.impl.PropertySerializerMap.findAndAddPrimarySerializer(PropertySerializerMap.java:72)
+	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter._findAndAddDynamic(BeanPropertyWriter.java:899)
+	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:710)
+	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:772)
+	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:178)
+	at com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(BeanPropertyWriter.java:732)
+	at com.fasterxml.jackson.databind.ser.std.BeanSerializerBase.serializeFields(BeanSerializerBase.java:772)
+	at com.fasterxml.jackson.databind.ser.BeanSerializer.serialize(BeanSerializer.java:178)
+	at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider._serialize(DefaultSerializerProvider.java:479)
+	at com.fasterxml.jackson.databind.ser.DefaultSerializerProvider.serializeValue(DefaultSerializerProvider.java:318)
+	at com.fasterxml.jackson.databind.ObjectWriter$Prefetch.serialize(ObjectWriter.java:1572)
+	at com.fasterxml.jackson.databind.ObjectWriter.writeValue(ObjectWriter.java:1061)
+	at org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter.writeInternal(AbstractJackson2HttpMessageConverter.java:483)
+	at org.springframework.http.converter.AbstractGenericHttpMessageConverter.write(AbstractGenericHttpMessageConverter.java:114)
+	at org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(AbstractMessageConverterMethodProcessor.java:297)
+	at org.springframework.web.servlet.mvc.method.annotation.HttpEntityMethodProcessor.handleReturnValue(HttpEntityMethodProcessor.java:245)
+	at org.springframework.web.method.support.HandlerMethodReturnValueHandlerComposite.handleReturnValue(HandlerMethodReturnValueHandlerComposite.java:78)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:136)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:917)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:829)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.ObservationFilterChainDecorator$FilterObservation$SimpleFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:479)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:340)
+	at org.springframework.security.web.ObservationFilterChainDecorator.lambda$wrapSecured$0(ObservationFilterChainDecorator.java:82)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:128)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131)
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at com.thaiinsurance.autoinsurance.security.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:48)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240)
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$0(ObservationFilterChainDecorator.java:323)
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:224)
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.base/java.lang.Thread.run(Thread.java:1447)
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.security.web.FilterChainProxy - Securing GET /error
+2025-08-26 23:31:05 [http-nio-8080-exec-1] DEBUG o.s.s.w.a.AnonymousAuthenticationFilter - Set SecurityContextHolder to anonymous SecurityContext
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  05:57 min
+[INFO] Finished at: 2025-08-26T23:36:29+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.2.0:run (default-cli) on project auto-insurance-backend: Process terminated with exit code: 137 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

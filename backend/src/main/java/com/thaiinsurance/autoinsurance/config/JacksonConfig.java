@@ -14,8 +14,19 @@ public class JacksonConfig {
     @Primary
     public ObjectMapper objectMapper() {
         ObjectMapper mapper = new ObjectMapper();
+        
+        // Register modules
         mapper.registerModule(new JavaTimeModule());
+        
+        // Disable timestamps for dates
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        
+        // Don't fail on empty beans (helps with proxies)
+        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        
+        // Handle lazy loading by ignoring hibernate proxy objects
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        
         return mapper;
     }
 }

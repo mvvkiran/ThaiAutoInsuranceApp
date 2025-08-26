@@ -1,11 +1,17 @@
 package com.thaiinsurance.autoinsurance.controller;
 
 import com.thaiinsurance.autoinsurance.dto.ApiResponse;
+import com.thaiinsurance.autoinsurance.dto.PolicyDTO;
+import com.thaiinsurance.autoinsurance.model.Policy;
 import com.thaiinsurance.autoinsurance.model.User;
 import com.thaiinsurance.autoinsurance.repository.UserRepository;
+import com.thaiinsurance.autoinsurance.service.PolicyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +31,9 @@ public class TestController {
     
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private PolicyService policyService;
     
     @GetMapping("/verify-users")
     public ResponseEntity<ApiResponse<Map<String, Object>>> verifyUsers() {
@@ -107,5 +116,36 @@ public class TestController {
         }
         
         return ResponseEntity.ok(ApiResponse.success("Password test complete", result));
+    }
+    
+    @GetMapping("/policies")
+    public ResponseEntity<ApiResponse<Page<PolicyDTO>>> testPolicies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        
+        logger.info("Testing policies endpoint - page: {}, size: {}", page, size);
+        
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            Page<Policy> policies = policyService.getAllPolicies(pageable);
+            
+            // Convert to DTO to avoid circular references
+            Page<PolicyDTO> policyDTOs = policies.map(PolicyDTO::new);
+            
+            logger.info("Found {} policies, returning page {}/{}", 
+                       policies.getTotalElements(), page + 1, policies.getTotalPages());
+            
+            return ResponseEntity.ok(ApiResponse.success("Policies retrieved successfully", policyDTOs));
+            
+        } catch (Exception e) {
+            logger.error("Error retrieving policies: {}", e.getMessage(), e);
+            return ResponseEntity.internalServerError()
+                    .body(ApiResponse.error("Failed to retrieve policies: " + e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/health")
+    public ResponseEntity<ApiResponse<String>> health() {
+        return ResponseEntity.ok(ApiResponse.success("Test endpoint is working", "OK"));
     }
 }
