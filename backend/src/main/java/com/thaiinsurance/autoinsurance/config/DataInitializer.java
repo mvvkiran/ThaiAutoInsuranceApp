@@ -55,26 +55,37 @@ public class DataInitializer implements CommandLineRunner {
         String adminEmail = "admin@insurance.com";
         logger.info("Creating admin user with email: {}", adminEmail);
         
-        if (!userRepository.existsByEmail(adminEmail)) {
-            User admin = new User();
-            admin.setUsername("admin");
-            admin.setEmail(adminEmail);
-            String encodedPassword = passwordEncoder.encode("Admin@123");
-            admin.setPassword(encodedPassword);
-            admin.setFirstName("System");
-            admin.setLastName("Administrator");
-            admin.setPhoneNumber("0812345678");
-            admin.setRole(Role.ADMIN);
-            admin.setIsActive(true);
-            admin.setEmailVerified(true);
-            admin.setPhoneVerified(true);
-            
-            User savedUser = userRepository.save(admin);
-            logger.info("✅ Admin user created successfully: {} (ID: {}, Role: {})", 
-                       adminEmail, savedUser.getId(), savedUser.getRole());
-        } else {
-            logger.info("⚠️ Admin user already exists: {}", adminEmail);
-        }
+        // Always recreate admin user to ensure it's correct
+        userRepository.findByEmail(adminEmail).ifPresent(user -> {
+            userRepository.delete(user);
+            logger.info("Deleted existing admin user for recreation");
+        });
+        
+        User admin = new User();
+        admin.setUsername("admin");
+        admin.setEmail(adminEmail);
+        String encodedPassword = passwordEncoder.encode("Admin@123");
+        admin.setPassword(encodedPassword);
+        admin.setFirstName("System");
+        admin.setLastName("Administrator");
+        admin.setPhoneNumber("0812345678");
+        admin.setRole(Role.ADMIN);
+        admin.setIsActive(true);
+        admin.setEmailVerified(true);
+        admin.setPhoneVerified(true);
+        admin.setFailedLoginAttempts(0);
+        admin.setAccountLocked(false);
+        admin.setPasswordChangeRequired(false);
+        
+        User savedUser = userRepository.save(admin);
+        
+        // Immediately verify the created user
+        boolean passwordMatches = passwordEncoder.matches("Admin@123", savedUser.getPassword());
+        logger.info("✅ Admin user created successfully: {} (ID: {}, Role: {}, PasswordMatches: {})", 
+                   adminEmail, savedUser.getId(), savedUser.getRole(), passwordMatches);
+        
+        // Test roles method
+        logger.info("Admin roles: {}, size: {}", savedUser.getRoles(), savedUser.getRoles().size());
     }
     
     private void createAgentUser() {
