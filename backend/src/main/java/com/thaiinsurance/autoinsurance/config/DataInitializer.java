@@ -7,10 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
+@Order(1) // Execute first
 public class DataInitializer implements CommandLineRunner {
     
     private static final Logger logger = LoggerFactory.getLogger(DataInitializer.class);
@@ -23,33 +25,42 @@ public class DataInitializer implements CommandLineRunner {
     
     @Override
     public void run(String... args) throws Exception {
-        logger.info("Initializing default users...");
+        logger.info("=== STARTING DEFAULT USERS INITIALIZATION ===");
         
-        // Create Admin User
-        createAdminUser();
-        
-        // Create Agent User
-        createAgentUser();
-        
-        // Create Customer User
-        createCustomerUser();
-        
-        // Create Underwriter User
-        createUnderwriterUser();
-        
-        // Create Claims Adjuster User
-        createClaimsAdjusterUser();
-        
-        logger.info("Default users initialization completed");
+        try {
+            // Create Admin User
+            createAdminUser();
+            
+            // Create Agent User
+            createAgentUser();
+            
+            // Create Customer User
+            createCustomerUser();
+            
+            // Create Underwriter User
+            createUnderwriterUser();
+            
+            // Create Claims Adjuster User
+            createClaimsAdjusterUser();
+            
+            logger.info("=== DEFAULT USERS INITIALIZATION COMPLETED SUCCESSFULLY ===");
+            
+        } catch (Exception e) {
+            logger.error("=== ERROR DURING USER INITIALIZATION ===", e);
+            throw e;
+        }
     }
     
     private void createAdminUser() {
         String adminEmail = "admin@insurance.com";
+        logger.info("Creating admin user with email: {}", adminEmail);
+        
         if (!userRepository.existsByEmail(adminEmail)) {
             User admin = new User();
             admin.setUsername("admin");
             admin.setEmail(adminEmail);
-            admin.setPassword(passwordEncoder.encode("Admin@123"));
+            String encodedPassword = passwordEncoder.encode("Admin@123");
+            admin.setPassword(encodedPassword);
             admin.setFirstName("System");
             admin.setLastName("Administrator");
             admin.setPhoneNumber("0812345678");
@@ -58,10 +69,11 @@ public class DataInitializer implements CommandLineRunner {
             admin.setEmailVerified(true);
             admin.setPhoneVerified(true);
             
-            userRepository.save(admin);
-            logger.info("Admin user created: {}", adminEmail);
+            User savedUser = userRepository.save(admin);
+            logger.info("✅ Admin user created successfully: {} (ID: {}, Role: {})", 
+                       adminEmail, savedUser.getId(), savedUser.getRole());
         } else {
-            logger.info("Admin user already exists: {}", adminEmail);
+            logger.info("⚠️ Admin user already exists: {}", adminEmail);
         }
     }
     

@@ -1,0 +1,47 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: thai-auto-insurance-backend-test
+  
+  profiles:
+    active: test
+  
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      
+  sql:
+    init:
+      mode: always
+      continue-on-error: false
+  
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+# JWT Configuration
+jwt:
+  secret: TestSecretKeyForTesting12345678901234567890123456789012345678901234567890
+  expiration: 86400000 # 24 hours
+  refresh-expiration: 604800000 # 7 days
+
+# Logging Configuration
+logging:
+  level:
+    com.thaiinsurance.autoinsurance: DEBUG
+    org.springframework.security: DEBUG
+    root: INFO
