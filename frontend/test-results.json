@@ -1,0 +1,309 @@
+{
+  "config": {
+    "configFile": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/playwright.config.ts",
+    "rootDir": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 3
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 3
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 3
+        },
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      },
+      {
+        "outputDir": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 3
+        },
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 5,
+    "webServer": {
+      "command": "npm start",
+      "url": "http://localhost:4200",
+      "reuseExistingServer": true,
+      "timeout": 120000
+    }
+  },
+  "suites": [
+    {
+      "title": "09-dashboard-profile-functionality.spec.ts",
+      "file": "09-dashboard-profile-functionality.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Dashboard and Profile Functionality Issues",
+          "file": "09-dashboard-profile-functionality.spec.ts",
+          "line": 10,
+          "column": 6,
+          "specs": [
+            {
+              "title": "Dashboard displays current policy counts correctly",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 30047,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/e2e/09-dashboard-profile-functionality.spec.ts",
+                            "column": 16,
+                            "line": 30
+                          },
+                          "message": "Error: page.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('text=Policy Management')\u001b[22m\n\n\n  28 |     \n  29 |     // Navigate to policies page to verify count matches\n> 30 |     await page.click('text=Policy Management');\n     |                ^\n  31 |     await page.waitForTimeout(2000);\n  32 |     \n  33 |     // Count active policies in the table\n    at /Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/e2e/09-dashboard-profile-functionality.spec.ts:30:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T14:29:52.714Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/test-results/09-dashboard-profile-funct-1307c-ent-policy-counts-correctly-chromium/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/test-results/09-dashboard-profile-funct-1307c-ent-policy-counts-correctly-chromium/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "443f837da25e4d1ce6dd-c75bb3b32bcb72bddee9",
+              "file": "09-dashboard-profile-functionality.spec.ts",
+              "line": 18,
+              "column": 7
+            },
+            {
+              "title": "Dashboard displays current policy counts correctly",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "firefox",
+                  "projectName": "firefox",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "timedOut",
+                      "duration": 30068,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/e2e/09-dashboard-profile-functionality.spec.ts",
+                            "column": 16,
+                            "line": 30
+                          },
+                          "message": "Error: page.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('text=Policy Management')\u001b[22m\n\n\n  28 |     \n  29 |     // Navigate to policies page to verify count matches\n> 30 |     await page.click('text=Policy Management');\n     |                ^\n  31 |     await page.waitForTimeout(2000);\n  32 |     \n  33 |     // Count active policies in the table\n    at /Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/e2e/09-dashboard-profile-functionality.spec.ts:30:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T14:29:52.713Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/test-results/09-dashboard-profile-funct-1307c-ent-policy-counts-correctly-firefox/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/test-results/09-dashboard-profile-funct-1307c-ent-policy-counts-correctly-firefox/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "443f837da25e4d1ce6dd-483b9421700b87b8af26",
+              "file": "09-dashboard-profile-functionality.spec.ts",
+              "line": 18,
+              "column": 7
+            },
+            {
+              "title": "Dashboard displays current policy counts correctly",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 2,
+                      "status": "timedOut",
+                      "duration": 30063,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 30000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/e2e/09-dashboard-profile-functionality.spec.ts",
+                            "column": 16,
+                            "line": 30
+                          },
+                          "message": "Error: page.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('text=Policy Management')\u001b[22m\n\n\n  28 |     \n  29 |     // Navigate to policies page to verify count matches\n> 30 |     await page.click('text=Policy Management');\n     |                ^\n  31 |     await page.waitForTimeout(2000);\n  32 |     \n  33 |     // Count active policies in the table\n    at /Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/e2e/09-dashboard-profile-functionality.spec.ts:30:16"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2025-08-26T14:29:52.715Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "screenshot",
+                          "contentType": "image/png",
+                          "path": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/test-results/09-dashboard-profile-funct-1307c-ent-policy-counts-correctly-webkit/test-failed-1.png"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/Users/mvvkiran/Workspace/Angular/auto-insurance-app/frontend/test-results/09-dashboard-profile-funct-1307c-ent-policy-counts-correctly-webkit/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "443f837da25e4d1ce6dd-37a2ea92987124379b10",
+              "file": "09-dashboard-profile-functionality.spec.ts",
+              "line": 18,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2025-08-26T14:29:52.451Z",
+    "duration": 31162.385000000002,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

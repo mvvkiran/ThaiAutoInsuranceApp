@@ -1,0 +1,531 @@
+package com.thaiinsurance.autoinsurance.service;
+
+import com.thaiinsurance.autoinsurance.model.*;
+import com.thaiinsurance.autoinsurance.repository.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * Service for Admin operations and system management
+ */
+@Service
+@Transactional
+public class AdminService {
+    
+    private static final Logger logger = LoggerFactory.getLogger(AdminService.class);
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private CustomerRepository customerRepository;
+    
+    @Autowired
+    private PolicyRepository policyRepository;
+    
+    @Autowired
+    private ClaimRepository claimRepository;
+    
+    @Autowired
+    private PaymentRepository paymentRepository;
+    
+    @Autowired
+    private VehicleRepository vehicleRepository;
+    
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    
+    /**
+     * Get system dashboard statistics
+     */
+    @Transactional(readOnly = true)
+    public SystemDashboard getDashboardStatistics() {
+        logger.info("Generating admin dashboard statistics");
+        
+        SystemDashboard dashboard = new SystemDashboard();
+        
+        // User statistics
+        dashboard.setTotalUsers(userRepository.count());
+        dashboard.setActiveUsers(userRepository.countByIsActiveTrue());
+        dashboard.setTotalCustomers(customerRepository.count());
+        dashboard.setActiveCustomers(customerRepository.countByIsActiveTrue());
+        
+        // Policy statistics
+        dashboard.setTotalPolicies(policyRepository.count());
+        dashboard.setActivePolicies(policyRepository.countByStatus(Policy.PolicyStatus.ACTIVE));
+        dashboard.setExpiredPolicies(policyRepository.countByStatus(Policy.PolicyStatus.EXPIRED));
+        dashboard.setCancelledPolicies(policyRepository.countByStatus(Policy.PolicyStatus.CANCELLED));
+        
+        // Claims statistics
+        dashboard.setTotalClaims(claimRepository.count());
+        dashboard.setPendingClaims(claimRepository.countByStatus(Claim.ClaimStatus.SUBMITTED));
+        dashboard.setApprovedClaims(claimRepository.countByStatus(Claim.ClaimStatus.APPROVED));
+        dashboard.setSettledClaims(claimRepository.countByStatus(Claim.ClaimStatus.SETTLED));
+        
+        // Payment statistics
+        dashboard.setTotalPayments(paymentRepository.count());
+        dashboard.setPendingPayments(paymentRepository.countByStatus(Payment.PaymentStatus.PENDING));
+        dashboard.setCompletedPayments(paymentRepository.countByStatus(Payment.PaymentStatus.COMPLETED));
+        
+        // Revenue statistics
+        dashboard.setTotalRevenue(paymentRepository.sumCompletedPaymentAmounts());
+        dashboard.setPendingRevenue(paymentRepository.sumPendingPaymentAmounts());
+        
+        // Vehicle statistics
+        dashboard.setTotalVehicles(vehicleRepository.count());
+        dashboard.setActiveVehicles(vehicleRepository.countByStatus(Vehicle.VehicleStatus.ACTIVE));
+        
+        // Recent activity counts (last 30 days)
+        LocalDate thirtyDaysAgo = LocalDate.now().minusDays(30);
+        dashboard.setNewCustomersLast30Days(customerRepository.countNewCustomersBetween(thirtyDaysAgo, LocalDate.now()));
+        dashboard.setNewPoliciesLast30Days(policyRepository.countNewPoliciesBetween(thirtyDaysAgo, LocalDate.now()));
+        dashboard.setNewClaimsLast30Days(claimRepository.countNewClaimsBetween(thirtyDaysAgo, LocalDate.now()));
+        
+        return dashboard;
+    }
+    
+    /**
+     * Get all users with pagination
+     */
+    @Transactional(readOnly = true)
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
+    
+    /**
+     * Search users
+     */
+    @Transactional(readOnly = true)
+    public Page<User> searchUsers(String searchTerm, Pageable pageable) {
+        return userRepository.searchUsers(searchTerm, pageable);
+    }
+    
+    /**
+     * Create new user (admin, agent, or staff)
+     */
+    public User createUser(User user, List<Role> roles) {
+        logger.info("Creating new user with username: {}", user.getUsername());
+        
+        // Validate user doesn't exist
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        
+        if (user.getEmail() != null && userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+        
+        // Encode password
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        
+        // Set roles
+        if (roles != null && !roles.isEmpty()) {
+            user.setRoles(roles);
+        } else {
+            user.addRole(Role.AGENT); // Default role
+        }
+        
+        // Set default values
+        user.setIsActive(true);
+        user.setEmailVerified(false);
+        user.setAccountLocked(false);
+        user.setFailedLoginAttempts(0);
+        
+        return userRepository.save(user);
+    }
+    
+    /**
+     * Update user information
+     */
+    public User updateUser(Long userId, User userDetails) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        // Update allowed fields
+        if (userDetails.getFirstName() != null) {
+            user.setFirstName(userDetails.getFirstName());
+        }
+        
+        if (userDetails.getLastName() != null) {
+            user.setLastName(userDetails.getLastName());
+        }
+        
+        if (userDetails.getEmail() != null && !userDetails.getEmail().equals(user.getEmail())) {
+            if (userRepository.existsByEmail(userDetails.getEmail())) {
+                throw new IllegalArgumentException("Email already exists");
+            }
+            user.setEmail(userDetails.getEmail());
+            user.setEmailVerified(false); // Re-verify email
+        }
+        
+        if (userDetails.getPhoneNumber() != null) {
+            user.setPhoneNumber(userDetails.getPhoneNumber());
+        }
+        
+        return userRepository.save(user);
+    }
+    
+    /**
+     * Reset user password
+     */
+    public User resetUserPassword(Long userId, String newPassword) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPasswordChangeRequired(true);
+        user.setPasswordChangedAt(LocalDateTime.now());
+        
+        return userRepository.save(user);
+    }
+    
+    /**
+     * Lock/Unlock user account
+     */
+    public User toggleUserAccountLock(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        user.setAccountLocked(!user.getAccountLocked());
+        
+        if (user.getAccountLocked()) {
+            user.setAccountLockedAt(LocalDateTime.now());
+        } else {
+            user.setAccountLockedAt(null);
+            user.setFailedLoginAttempts(0);
+        }
+        
+        return userRepository.save(user);
+    }
+    
+    /**
+     * Activate/Deactivate user
+     */
+    public User toggleUserActivation(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        user.setIsActive(!user.getIsActive());
+        
+        return userRepository.save(user);
+    }
+    
+    /**
+     * Get revenue report
+     */
+    @Transactional(readOnly = true)
+    public RevenueReport getRevenueReport(LocalDate startDate, LocalDate endDate) {
+        RevenueReport report = new RevenueReport();
+        report.setStartDate(startDate);
+        report.setEndDate(endDate);
+        
+        // Total revenue in date range
+        report.setTotalRevenue(paymentRepository.sumRevenueByDateRange(startDate, endDate));
+        
+        // Revenue by payment method
+        Map<String, BigDecimal> revenueByMethod = new HashMap<>();
+        for (Payment.PaymentMethod method : Payment.PaymentMethod.values()) {
+            BigDecimal amount = paymentRepository.sumRevenueByPaymentMethodAndDateRange(method, startDate, endDate);
+            revenueByMethod.put(method.name(), amount != null ? amount : BigDecimal.ZERO);
+        }
+        report.setRevenueByPaymentMethod(revenueByMethod);
+        
+        // Revenue by policy type
+        Map<String, BigDecimal> revenueByPolicyType = new HashMap<>();
+        for (Policy.PolicyType type : Policy.PolicyType.values()) {
+            BigDecimal amount = paymentRepository.sumRevenueByPolicyTypeAndDateRange(type, startDate, endDate);
+            revenueByPolicyType.put(type.name(), amount != null ? amount : BigDecimal.ZERO);
+        }
+        report.setRevenueByPolicyType(revenueByPolicyType);
+        
+        // Monthly breakdown
+        report.setMonthlyRevenue(paymentRepository.getMonthlyRevenue(startDate, endDate));
+        
+        return report;
+    }
+    
+    /**
+     * Get OIC regulatory report
+     */
+    @Transactional(readOnly = true)
+    public OICRegulatoryReport getOICRegulatoryReport(LocalDate reportDate) {
+        OICRegulatoryReport report = new OICRegulatoryReport();
+        report.setReportDate(reportDate);
+        
+        // Policy statistics
+        report.setTotalActivePolicies(policyRepository.countActiveByDate(reportDate));
+        report.setCmiPolicies(policyRepository.countByTypeAndStatusAndDate(Policy.PolicyType.CMI, Policy.PolicyStatus.ACTIVE, reportDate));
+        report.setVoluntaryPolicies(policyRepository.countByTypeAndStatusAndDate(Policy.PolicyType.VOLUNTARY, Policy.PolicyStatus.ACTIVE, reportDate));
+        
+        // Claims statistics
+        LocalDate startOfYear = reportDate.withDayOfYear(1);
+        report.setTotalClaimsYTD(claimRepository.countByDateRange(startOfYear, reportDate));
+        report.setSettledClaimsYTD(claimRepository.countSettledByDateRange(startOfYear, reportDate));
+        
+        // Financial statistics
+        report.setPremiumCollectedYTD(paymentRepository.sumCompletedPaymentAmountsByDateRange(startOfYear, reportDate));
+        report.setClaimsSettledAmountYTD(claimRepository.sumSettledAmountByDateRange(startOfYear, reportDate));
+        
+        // Compliance metrics
+        report.setAverageClaimSettlementDays(claimRepository.getAverageSettlementDays(startOfYear, reportDate));
+        report.setCustomerComplaintCount(0L); // Would be from a complaints table
+        
+        return report;
+    }
+    
+    /**
+     * Export data for external systems
+     */
+    @Transactional(readOnly = true)
+    public DataExport exportData(String dataType, LocalDate startDate, LocalDate endDate) {
+        logger.info("Exporting data type: {} for period: {} to {}", dataType, startDate, endDate);
+        
+        DataExport export = new DataExport();
+        export.setDataType(dataType);
+        export.setStartDate(startDate);
+        export.setEndDate(endDate);
+        export.setExportDate(LocalDateTime.now());
+        
+        switch (dataType.toLowerCase()) {
+            case "policies":
+                export.setRecordCount(policyRepository.countByDateRange(startDate, endDate));
+                // In real implementation, generate CSV/Excel data
+                export.setFileUrl("/exports/policies_" + System.currentTimeMillis() + ".csv");
+                break;
+                
+            case "claims":
+                export.setRecordCount(claimRepository.countByDateRange(startDate, endDate));
+                export.setFileUrl("/exports/claims_" + System.currentTimeMillis() + ".csv");
+                break;
+                
+            case "payments":
+                export.setRecordCount(paymentRepository.countByDateRange(startDate, endDate));
+                export.setFileUrl("/exports/payments_" + System.currentTimeMillis() + ".csv");
+                break;
+                
+            default:
+                throw new IllegalArgumentException("Unsupported data type: " + dataType);
+        }
+        
+        return export;
+    }
+    
+    /**
+     * Get system configuration
+     */
+    @Transactional(readOnly = true)
+    public Map<String, Object> getSystemConfiguration() {
+        Map<String, Object> config = new HashMap<>();
+        
+        // System settings (in real implementation, from configuration table)
+        config.put("maxFileUploadSize", "10MB");
+        config.put("sessionTimeout", 3600); // seconds
+        config.put("passwordMinLength", 8);
+        config.put("maxLoginAttempts", 5);
+        config.put("backupFrequency", "daily");
+        config.put("maintenanceMode", false);
+        
+        // Business settings
+        config.put("cmiBasePremium", 645.00);
+        config.put("vatRate", 0.07);
+        config.put("stampDuty", 1.00);
+        config.put("maxNoClaimDiscount", 0.50);
+        config.put("quoteValidityDays", 30);
+        
+        return config;
+    }
+    
+    /**
+     * Update system configuration
+     */
+    public Map<String, Object> updateSystemConfiguration(Map<String, Object> configUpdates) {
+        logger.info("Updating system configuration: {}", configUpdates.keySet());
+        
+        // In real implementation, validate and save to configuration table
+        // For now, just return the updates
+        return configUpdates;
+    }
+    
+    // Inner classes for response DTOs
+    
+    public static class SystemDashboard {
+        private long totalUsers;
+        private long activeUsers;
+        private long totalCustomers;
+        private long activeCustomers;
+        private long totalPolicies;
+        private long activePolicies;
+        private long expiredPolicies;
+        private long cancelledPolicies;
+        private long totalClaims;
+        private long pendingClaims;
+        private long approvedClaims;
+        private long settledClaims;
+        private long totalPayments;
+        private long pendingPayments;
+        private long completedPayments;
+        private BigDecimal totalRevenue;
+        private BigDecimal pendingRevenue;
+        private long totalVehicles;
+        private long activeVehicles;
+        private long newCustomersLast30Days;
+        private long newPoliciesLast30Days;
+        private long newClaimsLast30Days;
+        
+        // Getters and setters
+        public long getTotalUsers() { return totalUsers; }
+        public void setTotalUsers(long totalUsers) { this.totalUsers = totalUsers; }
+        public long getActiveUsers() { return activeUsers; }
+        public void setActiveUsers(long activeUsers) { this.activeUsers = activeUsers; }
+        public long getTotalCustomers() { return totalCustomers; }
+        public void setTotalCustomers(long totalCustomers) { this.totalCustomers = totalCustomers; }
+        public long getActiveCustomers() { return activeCustomers; }
+        public void setActiveCustomers(long activeCustomers) { this.activeCustomers = activeCustomers; }
+        public long getTotalPolicies() { return totalPolicies; }
+        public void setTotalPolicies(long totalPolicies) { this.totalPolicies = totalPolicies; }
+        public long getActivePolicies() { return activePolicies; }
+        public void setActivePolicies(long activePolicies) { this.activePolicies = activePolicies; }
+        public long getExpiredPolicies() { return expiredPolicies; }
+        public void setExpiredPolicies(long expiredPolicies) { this.expiredPolicies = expiredPolicies; }
+        public long getCancelledPolicies() { return cancelledPolicies; }
+        public void setCancelledPolicies(long cancelledPolicies) { this.cancelledPolicies = cancelledPolicies; }
+        public long getTotalClaims() { return totalClaims; }
+        public void setTotalClaims(long totalClaims) { this.totalClaims = totalClaims; }
+        public long getPendingClaims() { return pendingClaims; }
+        public void setPendingClaims(long pendingClaims) { this.pendingClaims = pendingClaims; }
+        public long getApprovedClaims() { return approvedClaims; }
+        public void setApprovedClaims(long approvedClaims) { this.approvedClaims = approvedClaims; }
+        public long getSettledClaims() { return settledClaims; }
+        public void setSettledClaims(long settledClaims) { this.settledClaims = settledClaims; }
+        public long getTotalPayments() { return totalPayments; }
+        public void setTotalPayments(long totalPayments) { this.totalPayments = totalPayments; }
+        public long getPendingPayments() { return pendingPayments; }
+        public void setPendingPayments(long pendingPayments) { this.pendingPayments = pendingPayments; }
+        public long getCompletedPayments() { return completedPayments; }
+        public void setCompletedPayments(long completedPayments) { this.completedPayments = completedPayments; }
+        public BigDecimal getTotalRevenue() { return totalRevenue; }
+        public void setTotalRevenue(BigDecimal totalRevenue) { this.totalRevenue = totalRevenue; }
+        public BigDecimal getPendingRevenue() { return pendingRevenue; }
+        public void setPendingRevenue(BigDecimal pendingRevenue) { this.pendingRevenue = pendingRevenue; }
+        public long getTotalVehicles() { return totalVehicles; }
+        public void setTotalVehicles(long totalVehicles) { this.totalVehicles = totalVehicles; }
+        public long getActiveVehicles() { return activeVehicles; }
+        public void setActiveVehicles(long activeVehicles) { this.activeVehicles = activeVehicles; }
+        public long getNewCustomersLast30Days() { return newCustomersLast30Days; }
+        public void setNewCustomersLast30Days(long newCustomersLast30Days) { this.newCustomersLast30Days = newCustomersLast30Days; }
+        public long getNewPoliciesLast30Days() { return newPoliciesLast30Days; }
+        public void setNewPoliciesLast30Days(long newPoliciesLast30Days) { this.newPoliciesLast30Days = newPoliciesLast30Days; }
+        public long getNewClaimsLast30Days() { return newClaimsLast30Days; }
+        public void setNewClaimsLast30Days(long newClaimsLast30Days) { this.newClaimsLast30Days = newClaimsLast30Days; }
+    }
+    
+    public static class RevenueReport {
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private BigDecimal totalRevenue;
+        private Map<String, BigDecimal> revenueByPaymentMethod;
+        private Map<String, BigDecimal> revenueByPolicyType;
+        private List<MonthlyRevenue> monthlyRevenue;
+        
+        // Getters and setters
+        public LocalDate getStartDate() { return startDate; }
+        public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+        public LocalDate getEndDate() { return endDate; }
+        public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+        public BigDecimal getTotalRevenue() { return totalRevenue; }
+        public void setTotalRevenue(BigDecimal totalRevenue) { this.totalRevenue = totalRevenue; }
+        public Map<String, BigDecimal> getRevenueByPaymentMethod() { return revenueByPaymentMethod; }
+        public void setRevenueByPaymentMethod(Map<String, BigDecimal> revenueByPaymentMethod) { this.revenueByPaymentMethod = revenueByPaymentMethod; }
+        public Map<String, BigDecimal> getRevenueByPolicyType() { return revenueByPolicyType; }
+        public void setRevenueByPolicyType(Map<String, BigDecimal> revenueByPolicyType) { this.revenueByPolicyType = revenueByPolicyType; }
+        public List<MonthlyRevenue> getMonthlyRevenue() { return monthlyRevenue; }
+        public void setMonthlyRevenue(List<MonthlyRevenue> monthlyRevenue) { this.monthlyRevenue = monthlyRevenue; }
+    }
+    
+    public static class MonthlyRevenue {
+        private String month;
+        private BigDecimal amount;
+        
+        public MonthlyRevenue(String month, BigDecimal amount) {
+            this.month = month;
+            this.amount = amount;
+        }
+        
+        public String getMonth() { return month; }
+        public void setMonth(String month) { this.month = month; }
+        public BigDecimal getAmount() { return amount; }
+        public void setAmount(BigDecimal amount) { this.amount = amount; }
+    }
+    
+    public static class OICRegulatoryReport {
+        private LocalDate reportDate;
+        private long totalActivePolicies;
+        private long cmiPolicies;
+        private long voluntaryPolicies;
+        private long totalClaimsYTD;
+        private long settledClaimsYTD;
+        private BigDecimal premiumCollectedYTD;
+        private BigDecimal claimsSettledAmountYTD;
+        private double averageClaimSettlementDays;
+        private long customerComplaintCount;
+        
+        // Getters and setters
+        public LocalDate getReportDate() { return reportDate; }
+        public void setReportDate(LocalDate reportDate) { this.reportDate = reportDate; }
+        public long getTotalActivePolicies() { return totalActivePolicies; }
+        public void setTotalActivePolicies(long totalActivePolicies) { this.totalActivePolicies = totalActivePolicies; }
+        public long getCmiPolicies() { return cmiPolicies; }
+        public void setCmiPolicies(long cmiPolicies) { this.cmiPolicies = cmiPolicies; }
+        public long getVoluntaryPolicies() { return voluntaryPolicies; }
+        public void setVoluntaryPolicies(long voluntaryPolicies) { this.voluntaryPolicies = voluntaryPolicies; }
+        public long getTotalClaimsYTD() { return totalClaimsYTD; }
+        public void setTotalClaimsYTD(long totalClaimsYTD) { this.totalClaimsYTD = totalClaimsYTD; }
+        public long getSettledClaimsYTD() { return settledClaimsYTD; }
+        public void setSettledClaimsYTD(long settledClaimsYTD) { this.settledClaimsYTD = settledClaimsYTD; }
+        public BigDecimal getPremiumCollectedYTD() { return premiumCollectedYTD; }
+        public void setPremiumCollectedYTD(BigDecimal premiumCollectedYTD) { this.premiumCollectedYTD = premiumCollectedYTD; }
+        public BigDecimal getClaimsSettledAmountYTD() { return claimsSettledAmountYTD; }
+        public void setClaimsSettledAmountYTD(BigDecimal claimsSettledAmountYTD) { this.claimsSettledAmountYTD = claimsSettledAmountYTD; }
+        public double getAverageClaimSettlementDays() { return averageClaimSettlementDays; }
+        public void setAverageClaimSettlementDays(double averageClaimSettlementDays) { this.averageClaimSettlementDays = averageClaimSettlementDays; }
+        public long getCustomerComplaintCount() { return customerComplaintCount; }
+        public void setCustomerComplaintCount(long customerComplaintCount) { this.customerComplaintCount = customerComplaintCount; }
+    }
+    
+    public static class DataExport {
+        private String dataType;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private LocalDateTime exportDate;
+        private long recordCount;
+        private String fileUrl;
+        
+        // Getters and setters
+        public String getDataType() { return dataType; }
+        public void setDataType(String dataType) { this.dataType = dataType; }
+        public LocalDate getStartDate() { return startDate; }
+        public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+        public LocalDate getEndDate() { return endDate; }
+        public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+        public LocalDateTime getExportDate() { return exportDate; }
+        public void setExportDate(LocalDateTime exportDate) { this.exportDate = exportDate; }
+        public long getRecordCount() { return recordCount; }
+        public void setRecordCount(long recordCount) { this.recordCount = recordCount; }
+        public String getFileUrl() { return fileUrl; }
+        public void setFileUrl(String fileUrl) { this.fileUrl = fileUrl; }
+    }
+}

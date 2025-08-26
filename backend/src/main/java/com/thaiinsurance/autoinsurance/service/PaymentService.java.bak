@@ -1,0 +1,482 @@
+package com.thaiinsurance.autoinsurance.service;
+
+import com.thaiinsurance.autoinsurance.dto.PaymentRequest;
+import com.thaiinsurance.autoinsurance.model.Payment;
+import com.thaiinsurance.autoinsurance.model.Policy;
+import com.thaiinsurance.autoinsurance.repository.PaymentRepository;
+import com.thaiinsurance.autoinsurance.repository.PolicyRepository;
+import com.thaiinsurance.autoinsurance.util.ThaiValidationUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+/**
+ * Service for Payment processing with Thai payment methods
+ */
+@Service
+@Transactional
+public class PaymentService {
+    
+    private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
+    
+    // Thai bank codes
+    private static final String[] THAI_BANK_CODES = {
+        "002", "004", "006", "011", "014", "017", "020", "022", "024", "025", "030", "034"
+    };
+    
+    @Autowired
+    private PaymentRepository paymentRepository;
+    
+    @Autowired
+    private PolicyRepository policyRepository;
+    
+    /**
+     * Process payment for policy
+     */
+    public Payment processPayment(PaymentRequest request) {
+        logger.info("Processing payment for policy {}", request.getPolicyId());
+        
+        // Validate policy exists
+        Policy policy = policyRepository.findById(request.getPolicyId())
+            .orElseThrow(() -> new IllegalArgumentException("Policy not found"));
+        
+        // Validate payment method specific requirements
+        validatePaymentMethod(request);
+        
+        // Create payment record
+        Payment payment = new Payment();
+        payment.setTransactionId(generateTransactionId());
+        payment.setPolicy(policy);
+        payment.setPaymentMethod(request.getPaymentMethod());
+        payment.setAmount(request.getAmount());
+        payment.setStatus(Payment.PaymentStatus.PENDING);
+        payment.setReferenceNumber(request.getReferenceNumber());
+        payment.setNotes(request.getNotes());
+        
+        // Set payment method specific details
+        setPaymentMethodDetails(payment, request);
+        
+        // Process based on payment method
+        switch (request.getPaymentMethod()) {
+            case PROMPTPAY:
+                processPromptPayPayment(payment, request);
+                break;
+            case BANK_TRANSFER:
+                processBankTransferPayment(payment, request);
+                break;
+            case CREDIT_CARD:
+                processCreditCardPayment(payment, request);
+                break;
+            case E_WALLET:
+                processEWalletPayment(payment, request);
+                break;
+            case CASH:
+                processCashPayment(payment, request);
+                break;
+        }
+        
+        payment = paymentRepository.save(payment);
+        
+        logger.info("Created payment {} for policy {}", 
+                   payment.getTransactionId(), policy.getPolicyNumber());
+        return payment;
+    }
+    
+    /**
+     * Get payment by ID
+     */
+    @Transactional(readOnly = true)
+    public Optional<Payment> getPaymentById(Long id) {
+        return paymentRepository.findById(id);
+    }
+    
+    /**
+     * Get payment by transaction ID
+     */
+    @Transactional(readOnly = true)
+    public Optional<Payment> getPaymentByTransactionId(String transactionId) {
+        return paymentRepository.findByTransactionId(transactionId);
+    }
+    
+    /**
+     * Get payments by policy
+     */
+    @Transactional(readOnly = true)
+    public List<Payment> getPaymentsByPolicy(Long policyId) {
+        return paymentRepository.findByPolicyId(policyId);
+    }
+    
+    /**
+     * Get payments by customer
+     */
+    @Transactional(readOnly = true)
+    public List<Payment> getPaymentsByCustomer(Long customerId) {
+        return paymentRepository.findByPolicyCustomerId(customerId);
+    }
+    
+    /**
+     * Get pending payments
+     */
+    @Transactional(readOnly = true)
+    public Page<Payment> getPendingPayments(Pageable pageable) {
+        return paymentRepository.findByStatus(Payment.PaymentStatus.PENDING, pageable);
+    }
+    
+    /**
+     * Confirm payment (for manual verification)
+     */
+    public Payment confirmPayment(Long paymentId, String confirmationNotes) {
+        Payment payment = paymentRepository.findById(paymentId)
+            .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
+        
+        if (payment.getStatus() != Payment.PaymentStatus.PENDING) {
+            throw new IllegalArgumentException("Payment is not pending");
+        }
+        
+        payment.setStatus(Payment.PaymentStatus.COMPLETED);
+        payment.setProcessedAt(LocalDateTime.now());
+        payment.setProcessedBy("MANUAL_VERIFICATION");
+        
+        if (confirmationNotes != null) {
+            String currentNotes = payment.getNotes() != null ? payment.getNotes() : "";
+            payment.setNotes(currentNotes + "\n[CONFIRMED] " + confirmationNotes);
+        }
+        
+        // Update policy status if needed
+        updatePolicyStatusAfterPayment(payment);
+        
+        return paymentRepository.save(payment);
+    }
+    
+    /**
+     * Reject payment
+     */
+    public Payment rejectPayment(Long paymentId, String rejectionReason) {
+        Payment payment = paymentRepository.findById(paymentId)
+            .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
+        
+        payment.setStatus(Payment.PaymentStatus.FAILED);
+        payment.setFailureReason(rejectionReason);
+        payment.setProcessedAt(LocalDateTime.now());
+        payment.setProcessedBy("MANUAL_VERIFICATION");
+        
+        return paymentRepository.save(payment);
+    }
+    
+    /**
+     * Process refund
+     */
+    public Payment processRefund(Long originalPaymentId, BigDecimal refundAmount, String reason) {
+        Payment originalPayment = paymentRepository.findById(originalPaymentId)
+            .orElseThrow(() -> new IllegalArgumentException("Original payment not found"));
+        
+        if (originalPayment.getStatus() != Payment.PaymentStatus.COMPLETED) {
+            throw new IllegalArgumentException("Can only refund completed payments");
+        }
+        
+        if (refundAmount.compareTo(originalPayment.getAmount()) > 0) {
+            throw new IllegalArgumentException("Refund amount cannot exceed original payment");
+        }
+        
+        Payment refund = new Payment();
+        refund.setTransactionId(generateTransactionId());
+        refund.setPolicy(originalPayment.getPolicy());
+        refund.setPaymentMethod(originalPayment.getPaymentMethod());
+        refund.setAmount(refundAmount.negate()); // Negative amount for refund
+        refund.setStatus(Payment.PaymentStatus.PENDING);
+        refund.setNotes("Refund for transaction: " + originalPayment.getTransactionId() + ". Reason: " + reason);
+        refund.setReferenceNumber("REFUND-" + originalPayment.getTransactionId());
+        refund.setOriginalPayment(originalPayment);
+        
+        return paymentRepository.save(refund);
+    }
+    
+    /**
+     * Generate payment invoice
+     */
+    public PaymentInvoice generateInvoice(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
+            .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
+        
+        if (payment.getStatus() != Payment.PaymentStatus.COMPLETED) {
+            throw new IllegalArgumentException("Can only generate invoice for completed payments");
+        }
+        
+        PaymentInvoice invoice = new PaymentInvoice();
+        invoice.setInvoiceNumber(generateInvoiceNumber());
+        invoice.setPayment(payment);
+        invoice.setIssuedDate(LocalDate.now());
+        invoice.setCompanyName("Thai Auto Insurance Co., Ltd.");
+        invoice.setCompanyAddress("123 Insurance Street, Bangkok 10110");
+        invoice.setCompanyTaxId("0123456789012");
+        
+        // Calculate VAT (7%)
+        BigDecimal amount = payment.getAmount();
+        BigDecimal vatRate = new BigDecimal("0.07");
+        BigDecimal vatAmount = amount.multiply(vatRate).divide(new BigDecimal("1.07"), 2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal netAmount = amount.subtract(vatAmount);
+        
+        invoice.setNetAmount(netAmount);
+        invoice.setVatAmount(vatAmount);
+        invoice.setTotalAmount(amount);
+        
+        return invoice;
+    }
+    
+    /**
+     * Get payment statistics
+     */
+    @Transactional(readOnly = true)
+    public PaymentStatistics getStatistics() {
+        PaymentStatistics stats = new PaymentStatistics();
+        stats.setTotalPayments(paymentRepository.count());
+        stats.setPendingPayments(paymentRepository.countByStatus(Payment.PaymentStatus.PENDING));
+        stats.setCompletedPayments(paymentRepository.countByStatus(Payment.PaymentStatus.COMPLETED));
+        stats.setFailedPayments(paymentRepository.countByStatus(Payment.PaymentStatus.FAILED));
+        
+        // Calculate total amounts
+        stats.setTotalAmount(paymentRepository.sumCompletedPaymentAmounts());
+        stats.setPendingAmount(paymentRepository.sumPendingPaymentAmounts());
+        
+        return stats;
+    }
+    
+    // Private helper methods
+    
+    private void validatePaymentMethod(PaymentRequest request) {
+        switch (request.getPaymentMethod()) {
+            case PROMPTPAY:
+                validatePromptPayRequest(request);
+                break;
+            case BANK_TRANSFER:
+                validateBankTransferRequest(request);
+                break;
+            case CREDIT_CARD:
+                validateCreditCardRequest(request);
+                break;
+            case E_WALLET:
+                validateEWalletRequest(request);
+                break;
+        }
+    }
+    
+    private void validatePromptPayRequest(PaymentRequest request) {
+        if (request.getPromptPayPhoneNumber() == null && request.getPromptPayNationalId() == null) {
+            throw new IllegalArgumentException("Either PromptPay phone number or National ID is required");
+        }
+        
+        if (request.getPromptPayPhoneNumber() != null) {
+            if (!ThaiValidationUtil.isValidThaiPhoneNumber(request.getPromptPayPhoneNumber())) {
+                throw new IllegalArgumentException("Invalid Thai phone number for PromptPay");
+            }
+        }
+        
+        if (request.getPromptPayNationalId() != null) {
+            if (!ThaiValidationUtil.isValidThaiNationalId(request.getPromptPayNationalId())) {
+                throw new IllegalArgumentException("Invalid Thai National ID for PromptPay");
+            }
+        }
+    }
+    
+    private void validateBankTransferRequest(PaymentRequest request) {
+        if (request.getBankCode() == null) {
+            throw new IllegalArgumentException("Bank code is required for bank transfer");
+        }
+        
+        boolean validBankCode = false;
+        for (String code : THAI_BANK_CODES) {
+            if (code.equals(request.getBankCode())) {
+                validBankCode = true;
+                break;
+            }
+        }
+        
+        if (!validBankCode) {
+            throw new IllegalArgumentException("Invalid Thai bank code");
+        }
+    }
+    
+    private void validateCreditCardRequest(PaymentRequest request) {
+        if (request.getCreditCardNumber() == null || request.getCreditCardNumber().length() < 13) {
+            throw new IllegalArgumentException("Valid credit card number is required");
+        }
+        
+        if (request.getCreditCardHolderName() == null || request.getCreditCardHolderName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Credit card holder name is required");
+        }
+        
+        if (request.getCreditCardExpiry() == null) {
+            throw new IllegalArgumentException("Credit card expiry date is required");
+        }
+        
+        if (request.getCreditCardCvv() == null || request.getCreditCardCvv().length() < 3) {
+            throw new IllegalArgumentException("Valid CVV is required");
+        }
+    }
+    
+    private void validateEWalletRequest(PaymentRequest request) {
+        if (request.geteWalletType() == null) {
+            throw new IllegalArgumentException("E-wallet type is required");
+        }
+        
+        if (request.geteWalletPhoneNumber() == null) {
+            throw new IllegalArgumentException("E-wallet phone number is required");
+        }
+        
+        if (!ThaiValidationUtil.isValidThaiPhoneNumber(request.geteWalletPhoneNumber())) {
+            throw new IllegalArgumentException("Invalid Thai phone number for e-wallet");
+        }
+    }
+    
+    private void setPaymentMethodDetails(Payment payment, PaymentRequest request) {
+        switch (request.getPaymentMethod()) {
+            case PROMPTPAY:
+                payment.setPromptPayQrCode(request.getPromptPayQrCode());
+                break;
+            case BANK_TRANSFER:
+                payment.setBankCode(request.getBankCode());
+                payment.setBankAccountNumber(request.getBankAccountNumber());
+                break;
+            case CREDIT_CARD:
+                // Only store masked card number for security
+                payment.setCreditCardLast4(request.getCreditCardNumber().substring(
+                    Math.max(0, request.getCreditCardNumber().length() - 4)));
+                payment.setCreditCardHolderName(request.getCreditCardHolderName());
+                break;
+        }
+    }
+    
+    private void processPromptPayPayment(Payment payment, PaymentRequest request) {
+        // In real implementation, integrate with PromptPay API
+        payment.setStatus(Payment.PaymentStatus.PENDING);
+        payment.setProcessedBy("PROMPTPAY_GATEWAY");
+        
+        logger.info("PromptPay payment initiated for amount {}", request.getAmount());
+    }
+    
+    private void processBankTransferPayment(Payment payment, PaymentRequest request) {
+        // For bank transfer, usually requires manual verification
+        payment.setStatus(Payment.PaymentStatus.PENDING);
+        payment.setProcessedBy("BANK_TRANSFER");
+        
+        logger.info("Bank transfer payment recorded for verification");
+    }
+    
+    private void processCreditCardPayment(Payment payment, PaymentRequest request) {
+        // In real implementation, integrate with payment gateway
+        payment.setStatus(Payment.PaymentStatus.PENDING);
+        payment.setProcessedBy("PAYMENT_GATEWAY");
+        
+        logger.info("Credit card payment initiated for amount {}", request.getAmount());
+    }
+    
+    private void processEWalletPayment(Payment payment, PaymentRequest request) {
+        // In real implementation, integrate with e-wallet APIs
+        payment.setStatus(Payment.PaymentStatus.PENDING);
+        payment.setProcessedBy("EWALLET_GATEWAY");
+        
+        logger.info("E-wallet payment initiated for amount {}", request.getAmount());
+    }
+    
+    private void processCashPayment(Payment payment, PaymentRequest request) {
+        // Cash payments are usually confirmed immediately
+        payment.setStatus(Payment.PaymentStatus.COMPLETED);
+        payment.setProcessedAt(LocalDateTime.now());
+        payment.setProcessedBy("CASH_COUNTER");
+        
+        updatePolicyStatusAfterPayment(payment);
+    }
+    
+    private void updatePolicyStatusAfterPayment(Payment payment) {
+        Policy policy = payment.getPolicy();
+        
+        // Check if this completes the premium payment
+        BigDecimal totalPaid = paymentRepository.sumCompletedPaymentAmountsByPolicy(policy.getId());
+        
+        if (totalPaid.compareTo(policy.getTotalAmount()) >= 0) {
+            policy.setStatus(Policy.PolicyStatus.ACTIVE);
+            policyRepository.save(policy);
+            logger.info("Policy {} activated after payment completion", policy.getPolicyNumber());
+        }
+    }
+    
+    private String generateTransactionId() {
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String uuid = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        return "TXN-" + timestamp + "-" + uuid;
+    }
+    
+    private String generateInvoiceNumber() {
+        String timestamp = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        String uuid = UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        return "INV-" + timestamp + "-" + uuid;
+    }
+    
+    // Inner classes
+    public static class PaymentInvoice {
+        private String invoiceNumber;
+        private Payment payment;
+        private LocalDate issuedDate;
+        private String companyName;
+        private String companyAddress;
+        private String companyTaxId;
+        private BigDecimal netAmount;
+        private BigDecimal vatAmount;
+        private BigDecimal totalAmount;
+        
+        // Getters and setters
+        public String getInvoiceNumber() { return invoiceNumber; }
+        public void setInvoiceNumber(String invoiceNumber) { this.invoiceNumber = invoiceNumber; }
+        public Payment getPayment() { return payment; }
+        public void setPayment(Payment payment) { this.payment = payment; }
+        public LocalDate getIssuedDate() { return issuedDate; }
+        public void setIssuedDate(LocalDate issuedDate) { this.issuedDate = issuedDate; }
+        public String getCompanyName() { return companyName; }
+        public void setCompanyName(String companyName) { this.companyName = companyName; }
+        public String getCompanyAddress() { return companyAddress; }
+        public void setCompanyAddress(String companyAddress) { this.companyAddress = companyAddress; }
+        public String getCompanyTaxId() { return companyTaxId; }
+        public void setCompanyTaxId(String companyTaxId) { this.companyTaxId = companyTaxId; }
+        public BigDecimal getNetAmount() { return netAmount; }
+        public void setNetAmount(BigDecimal netAmount) { this.netAmount = netAmount; }
+        public BigDecimal getVatAmount() { return vatAmount; }
+        public void setVatAmount(BigDecimal vatAmount) { this.vatAmount = vatAmount; }
+        public BigDecimal getTotalAmount() { return totalAmount; }
+        public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+    }
+    
+    public static class PaymentStatistics {
+        private long totalPayments;
+        private long pendingPayments;
+        private long completedPayments;
+        private long failedPayments;
+        private BigDecimal totalAmount;
+        private BigDecimal pendingAmount;
+        
+        // Getters and setters
+        public long getTotalPayments() { return totalPayments; }
+        public void setTotalPayments(long totalPayments) { this.totalPayments = totalPayments; }
+        public long getPendingPayments() { return pendingPayments; }
+        public void setPendingPayments(long pendingPayments) { this.pendingPayments = pendingPayments; }
+        public long getCompletedPayments() { return completedPayments; }
+        public void setCompletedPayments(long completedPayments) { this.completedPayments = completedPayments; }
+        public long getFailedPayments() { return failedPayments; }
+        public void setFailedPayments(long failedPayments) { this.failedPayments = failedPayments; }
+        public BigDecimal getTotalAmount() { return totalAmount; }
+        public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+        public BigDecimal getPendingAmount() { return pendingAmount; }
+        public void setPendingAmount(BigDecimal pendingAmount) { this.pendingAmount = pendingAmount; }
+    }
+}

@@ -1,0 +1,37 @@
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+  
+  security:
+    require-ssl: true
+
+server:
+  ssl:
+    enabled: ${SSL_ENABLED:false}
+    key-store: ${SSL_KEY_STORE:}
+    key-store-password: ${SSL_KEY_STORE_PASSWORD:}
+    key-password: ${SSL_KEY_PASSWORD:}
+
+# Production logging
+logging:
+  level:
+    com.thaiinsurance.autoinsurance: INFO
+    root: WARN
+  file:
+    name: /var/log/thai-auto-insurance.log
+
+# Production CORS (more restrictive)
+cors:
+  allowed-origins: ${ALLOWED_ORIGINS:https://yourdomain.com}
+  allowed-methods: GET,POST,PUT,DELETE,PATCH
+  allowed-headers: Authorization,Content-Type,X-Requested-With
+  allow-credentials: true
+  max-age: 3600

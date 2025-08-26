@@ -1,0 +1,326 @@
+package com.thaiinsurance.autoinsurance.controller;
+
+import com.thaiinsurance.autoinsurance.dto.ApiResponse;
+import com.thaiinsurance.autoinsurance.dto.PaymentRequest;
+import com.thaiinsurance.autoinsurance.model.Payment;
+import com.thaiinsurance.autoinsurance.service.PaymentService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * REST Controller for Payment Processing
+ * Handles Thai payment methods including PromptPay, bank transfer, credit card, and e-wallets
+ */
+@RestController
+@RequestMapping("/api/payments")
+@Tag(name = "Payment Processing", description = "Thai payment processing APIs for insurance premiums")
+public class PaymentController {
+    
+    @Autowired
+    private PaymentService paymentService;
+    
+    @PostMapping("/process")
+    @Operation(summary = "Process payment", 
+               description = "Process payment for insurance premium using Thai payment methods")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Payment>> processPayment(@Valid @RequestBody PaymentRequest request) {
+        try {
+            Payment payment = paymentService.processPayment(request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApiResponse.success("Payment processed successfully", payment));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Payment processing failed", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("Payment processing failed", "Internal server error"));
+        }
+    }
+    
+    @GetMapping("/{id}")
+    @Operation(summary = "Get payment by ID", 
+               description = "Retrieve payment details by ID")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Payment>> getPaymentById(@PathVariable Long id) {
+        return paymentService.getPaymentById(id)
+                .map(payment -> ResponseEntity.ok(ApiResponse.success("Payment found", payment)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
+    @GetMapping("/transaction/{transactionId}")
+    @Operation(summary = "Get payment by transaction ID", 
+               description = "Retrieve payment by transaction ID")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Payment>> getPaymentByTransactionId(@PathVariable String transactionId) {
+        return paymentService.getPaymentByTransactionId(transactionId)
+                .map(payment -> ResponseEntity.ok(ApiResponse.success("Payment found", payment)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
+    @GetMapping("/policy/{policyId}")
+    @Operation(summary = "Get payments by policy", 
+               description = "Retrieve all payments for a policy")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<Payment>>> getPaymentsByPolicy(@PathVariable Long policyId) {
+        List<Payment> payments = paymentService.getPaymentsByPolicy(policyId);
+        return ResponseEntity.ok(ApiResponse.success("Policy payments retrieved", payments));
+    }
+    
+    @GetMapping("/customer/{customerId}")
+    @Operation(summary = "Get payments by customer", 
+               description = "Retrieve all payments for a customer")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<Payment>>> getPaymentsByCustomer(@PathVariable Long customerId) {
+        List<Payment> payments = paymentService.getPaymentsByCustomer(customerId);
+        return ResponseEntity.ok(ApiResponse.success("Customer payments retrieved", payments));
+    }
+    
+    @GetMapping("/pending")
+    @Operation(summary = "Get pending payments", 
+               description = "Retrieve all pending payments for manual verification")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Page<Payment>>> getPendingPayments(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+        
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        Page<Payment> payments = paymentService.getPendingPayments(pageable);
+        return ResponseEntity.ok(ApiResponse.success("Pending payments retrieved", payments));
+    }
+    
+    @PutMapping("/{paymentId}/confirm")
+    @Operation(summary = "Confirm payment", 
+               description = "Manually confirm pending payment")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Payment>> confirmPayment(
+            @PathVariable Long paymentId,
+            @RequestBody PaymentConfirmationRequest request) {
+        try {
+            Payment confirmedPayment = paymentService.confirmPayment(paymentId, request.getConfirmationNotes());
+            return ResponseEntity.ok(ApiResponse.success("Payment confirmed successfully", confirmedPayment));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Payment confirmation failed", e.getMessage()));
+        }
+    }
+    
+    @PutMapping("/{paymentId}/reject")
+    @Operation(summary = "Reject payment", 
+               description = "Reject pending payment with reason")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Payment>> rejectPayment(
+            @PathVariable Long paymentId,
+            @RequestBody PaymentRejectionRequest request) {
+        try {
+            Payment rejectedPayment = paymentService.rejectPayment(paymentId, request.getRejectionReason());
+            return ResponseEntity.ok(ApiResponse.success("Payment rejected successfully", rejectedPayment));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Payment rejection failed", e.getMessage()));
+        }
+    }
+    
+    @PostMapping("/{paymentId}/refund")
+    @Operation(summary = "Process refund", 
+               description = "Process refund for completed payment")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Payment>> processRefund(
+            @PathVariable Long paymentId,
+            @RequestBody RefundRequest request) {
+        try {
+            Payment refund = paymentService.processRefund(
+                paymentId, request.getRefundAmount(), request.getReason());
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApiResponse.success("Refund processed successfully", refund));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Refund processing failed", e.getMessage()));
+        }
+    }
+    
+    @PostMapping("/{paymentId}/invoice")
+    @Operation(summary = "Generate invoice", 
+               description = "Generate tax invoice for completed payment")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<PaymentService.PaymentInvoice>> generateInvoice(@PathVariable Long paymentId) {
+        try {
+            PaymentService.PaymentInvoice invoice = paymentService.generateInvoice(paymentId);
+            return ResponseEntity.ok(ApiResponse.success("Invoice generated successfully", invoice));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Invoice generation failed", e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/statistics")
+    @Operation(summary = "Get payment statistics", 
+               description = "Get payment statistics by status and amount")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<PaymentService.PaymentStatistics>> getStatistics() {
+        PaymentService.PaymentStatistics stats = paymentService.getStatistics();
+        return ResponseEntity.ok(ApiResponse.success("Payment statistics retrieved", stats));
+    }
+    
+    @GetMapping("/methods/promptpay/qr")
+    @Operation(summary = "Generate PromptPay QR code", 
+               description = "Generate PromptPay QR code for payment")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<PromptPayQRResponse>> generatePromptPayQR(
+            @RequestParam String phoneOrNationalId,
+            @RequestParam BigDecimal amount) {
+        try {
+            // In real implementation, generate actual PromptPay QR code
+            PromptPayQRResponse response = new PromptPayQRResponse();
+            response.setQrCode("mock-qr-code-data");
+            response.setAmount(amount);
+            response.setPromptPayId(phoneOrNationalId);
+            response.setExpiryTime("15 minutes");
+            
+            return ResponseEntity.ok(ApiResponse.success("PromptPay QR generated", response));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("QR generation failed", e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/methods/banks")
+    @Operation(summary = "Get supported Thai banks", 
+               description = "Get list of supported Thai banks for bank transfer")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<BankInfo>>> getSupportedBanks() {
+        List<BankInfo> banks = List.of(
+            new BankInfo("002", "Bangkok Bank", "BBL"),
+            new BankInfo("004", "Kasikorn Bank", "KBANK"),
+            new BankInfo("006", "Krung Thai Bank", "KTB"),
+            new BankInfo("011", "TMB Bank", "TMB"),
+            new BankInfo("014", "Government Savings Bank", "GSB"),
+            new BankInfo("017", "Government Housing Bank", "GHB"),
+            new BankInfo("020", "Standard Chartered Bank", "SCB"),
+            new BankInfo("022", "CIMB Thai Bank", "CIMB"),
+            new BankInfo("024", "United Overseas Bank", "UOB"),
+            new BankInfo("025", "Bank of Ayudhya", "BAY"),
+            new BankInfo("030", "Mega International Commercial Bank", "MEGA"),
+            new BankInfo("034", "Thailand Development Bank", "TDB")
+        );
+        
+        return ResponseEntity.ok(ApiResponse.success("Supported banks retrieved", banks));
+    }
+    
+    @GetMapping("/methods/ewallet")
+    @Operation(summary = "Get supported e-wallets", 
+               description = "Get list of supported Thai e-wallets")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<EWalletInfo>>> getSupportedEWallets() {
+        List<EWalletInfo> wallets = List.of(
+            new EWalletInfo("TRUEMONEY", "TrueMoney Wallet", "https://truemoney.com"),
+            new EWalletInfo("LINEPAY", "LINE Pay", "https://linepay.co.th"),
+            new EWalletInfo("RABBIT", "Rabbit LINE Pay", "https://rabbit.co.th"),
+            new EWalletInfo("AIRPAY", "AirPay", "https://airpay.co.th"),
+            new EWalletInfo("ALIPAY", "Alipay", "https://alipay.com"),
+            new EWalletInfo("WECHAT", "WeChat Pay", "https://wechatpay.com")
+        );
+        
+        return ResponseEntity.ok(ApiResponse.success("Supported e-wallets retrieved", wallets));
+    }
+    
+    // Inner classes for request/response DTOs
+    
+    public static class PaymentConfirmationRequest {
+        private String confirmationNotes;
+        
+        public String getConfirmationNotes() { return confirmationNotes; }
+        public void setConfirmationNotes(String confirmationNotes) { this.confirmationNotes = confirmationNotes; }
+    }
+    
+    public static class PaymentRejectionRequest {
+        private String rejectionReason;
+        
+        public String getRejectionReason() { return rejectionReason; }
+        public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+    }
+    
+    public static class RefundRequest {
+        private BigDecimal refundAmount;
+        private String reason;
+        
+        public BigDecimal getRefundAmount() { return refundAmount; }
+        public void setRefundAmount(BigDecimal refundAmount) { this.refundAmount = refundAmount; }
+        public String getReason() { return reason; }
+        public void setReason(String reason) { this.reason = reason; }
+    }
+    
+    public static class PromptPayQRResponse {
+        private String qrCode;
+        private BigDecimal amount;
+        private String promptPayId;
+        private String expiryTime;
+        
+        // Getters and setters
+        public String getQrCode() { return qrCode; }
+        public void setQrCode(String qrCode) { this.qrCode = qrCode; }
+        public BigDecimal getAmount() { return amount; }
+        public void setAmount(BigDecimal amount) { this.amount = amount; }
+        public String getPromptPayId() { return promptPayId; }
+        public void setPromptPayId(String promptPayId) { this.promptPayId = promptPayId; }
+        public String getExpiryTime() { return expiryTime; }
+        public void setExpiryTime(String expiryTime) { this.expiryTime = expiryTime; }
+    }
+    
+    public static class BankInfo {
+        private String code;
+        private String name;
+        private String shortName;
+        
+        public BankInfo(String code, String name, String shortName) {
+            this.code = code;
+            this.name = name;
+            this.shortName = shortName;
+        }
+        
+        // Getters and setters
+        public String getCode() { return code; }
+        public void setCode(String code) { this.code = code; }
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getShortName() { return shortName; }
+        public void setShortName(String shortName) { this.shortName = shortName; }
+    }
+    
+    public static class EWalletInfo {
+        private String code;
+        private String name;
+        private String website;
+        
+        public EWalletInfo(String code, String name, String website) {
+            this.code = code;
+            this.name = name;
+            this.website = website;
+        }
+        
+        // Getters and setters
+        public String getCode() { return code; }
+        public void setCode(String code) { this.code = code; }
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getWebsite() { return website; }
+        public void setWebsite(String website) { this.website = website; }
+    }
+}

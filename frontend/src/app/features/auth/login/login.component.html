@@ -1,0 +1,97 @@
+<div class="login-container">
+  <div class="login-card">
+    <mat-card class="login-form-card">
+      
+      <!-- Logo and Title -->
+      <mat-card-header class="login-header">
+        <div class="login-logo">
+          <mat-icon class="logo-icon">directions_car</mat-icon>
+          <h1 class="app-title">{{ 'common.appName' | translate }}</h1>
+        </div>
+        <p class="login-subtitle">{{ 'auth.loginSubtitle' | translate }}</p>
+      </mat-card-header>
+
+      <!-- Login Form -->
+      <mat-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+          
+          <!-- Username/Email Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'auth.usernameOrEmail' | translate }}</mat-label>
+            <input matInput 
+                   type="text" 
+                   formControlName="username"
+                   [placeholder]="'auth.usernameOrEmailPlaceholder' | translate"
+                   appAutofocus>
+            <mat-icon matSuffix>person</mat-icon>
+            <mat-error>{{ getErrorMessage('username') }}</mat-error>
+          </mat-form-field>
+
+          <!-- Password Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>{{ 'auth.password' | translate }}</mat-label>
+            <input matInput 
+                   [type]="hidePassword ? 'password' : 'text'" 
+                   formControlName="password"
+                   [placeholder]="'auth.passwordPlaceholder' | translate">
+            <button mat-icon-button 
+                    matSuffix 
+                    type="button"
+                    (click)="hidePassword = !hidePassword"
+                    [attr.aria-label]="'auth.togglePassword' | translate">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <mat-error>{{ getErrorMessage('password') }}</mat-error>
+          </mat-form-field>
+
+          <!-- Remember Me -->
+          <div class="login-options">
+            <mat-checkbox formControlName="rememberMe">
+              {{ 'auth.rememberMe' | translate }}
+            </mat-checkbox>
+            
+            <a routerLink="/auth/forgot-password" class="forgot-password-link">
+              {{ 'auth.forgotPassword' | translate }}
+            </a>
+          </div>
+
+          <!-- Submit Button -->
+          <button mat-raised-button 
+                  color="primary" 
+                  type="submit"
+                  class="login-button full-width"
+                  [disabled]="isLoading">
+            <mat-spinner diameter="20" 
+                        strokeWidth="2" 
+                        *ngIf="isLoading"></mat-spinner>
+            <span *ngIf="!isLoading">{{ 'auth.login' | translate }}</span>
+            <span *ngIf="isLoading">{{ 'common.loading' | translate }}</span>
+          </button>
+
+        </form>
+      </mat-card-content>
+
+      <!-- Footer -->
+      <mat-card-actions class="login-footer">
+        <div class="register-section">
+          <span class="register-text">{{ 'auth.noAccount' | translate }}</span>
+          <a routerLink="/auth/register" class="register-link">
+            {{ 'auth.register' | translate }}
+          </a>
+        </div>
+      </mat-card-actions>
+
+    </mat-card>
+  </div>
+
+  <!-- Language Toggle -->
+  <div class="language-toggle">
+    <button mat-icon-button 
+            (click)="translationService.toggleLanguage()"
+            class="language-btn">
+      <mat-icon>translate</mat-icon>
+      <span class="language-text">{{ translationService.currentLanguage === 'th' ? 'EN' : 'TH' }}</span>
+    </button>
+  </div>
+
+</div>

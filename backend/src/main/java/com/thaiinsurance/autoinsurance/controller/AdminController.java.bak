@@ -1,0 +1,417 @@
+package com.thaiinsurance.autoinsurance.controller;
+
+import com.thaiinsurance.autoinsurance.dto.ApiResponse;
+import com.thaiinsurance.autoinsurance.model.Role;
+import com.thaiinsurance.autoinsurance.model.User;
+import com.thaiinsurance.autoinsurance.service.AdminServiceSimple;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * REST Controller for Admin operations and system management
+ * Handles user management, system configuration, and regulatory compliance
+ */
+@RestController
+@RequestMapping("/api/admin")
+@Tag(name = "Admin Management", description = "System administration and management APIs")
+public class AdminController {
+    
+    @Autowired
+    private AdminService adminService;
+    
+    @GetMapping("/dashboard")
+    @Operation(summary = "Get admin dashboard", 
+               description = "Get comprehensive system statistics for admin dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<AdminService.SystemDashboard>> getDashboard() {
+        AdminService.SystemDashboard dashboard = adminService.getDashboardStatistics();
+        return ResponseEntity.ok(ApiResponse.success("Dashboard statistics retrieved", dashboard));
+    }
+    
+    @GetMapping("/users")
+    @Operation(summary = "Get all users", 
+               description = "Retrieve all system users with pagination")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Page<User>>> getAllUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+        
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        Page<User> users = adminService.getAllUsers(pageable);
+        return ResponseEntity.ok(ApiResponse.success("Users retrieved successfully", users));
+    }
+    
+    @GetMapping("/users/search")
+    @Operation(summary = "Search users", 
+               description = "Search users by username, email, or name")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Page<User>>> searchUsers(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+        
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        Page<User> users = adminService.searchUsers(query, pageable);
+        return ResponseEntity.ok(ApiResponse.success("User search completed", users));
+    }
+    
+    @PostMapping("/users")
+    @Operation(summary = "Create new user", 
+               description = "Create new system user (admin, agent, or staff)")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<User>> createUser(
+            @Valid @RequestBody CreateUserRequest request) {
+        try {
+            User createdUser = adminService.createUser(request.getUser(), request.getRoles());
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApiResponse.success("User created successfully", createdUser));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("User creation failed", e.getMessage()));
+        }
+    }
+    
+    @PutMapping("/users/{userId}")
+    @Operation(summary = "Update user information", 
+               description = "Update user details")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<User>> updateUser(
+            @PathVariable Long userId, 
+            @Valid @RequestBody User userDetails) {
+        try {
+            User updatedUser = adminService.updateUser(userId, userDetails);
+            return ResponseEntity.ok(ApiResponse.success("User updated successfully", updatedUser));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("User update failed", e.getMessage()));
+        }
+    }
+    
+    @PutMapping("/users/{userId}/reset-password")
+    @Operation(summary = "Reset user password", 
+               description = "Reset password for system user")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<User>> resetUserPassword(
+            @PathVariable Long userId, 
+            @RequestBody PasswordResetRequest request) {
+        try {
+            User updatedUser = adminService.resetUserPassword(userId, request.getNewPassword());
+            return ResponseEntity.ok(ApiResponse.success("Password reset successfully", updatedUser));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Password reset failed", e.getMessage()));
+        }
+    }
+    
+    @PutMapping("/users/{userId}/toggle-lock")
+    @Operation(summary = "Lock/Unlock user account", 
+               description = "Toggle user account lock status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<User>> toggleUserAccountLock(@PathVariable Long userId) {
+        try {
+            User updatedUser = adminService.toggleUserAccountLock(userId);
+            String action = updatedUser.getAccountLocked() ? "locked" : "unlocked";
+            return ResponseEntity.ok(ApiResponse.success("User account " + action + " successfully", updatedUser));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Account lock toggle failed", e.getMessage()));
+        }
+    }
+    
+    @PutMapping("/users/{userId}/toggle-activation")
+    @Operation(summary = "Activate/Deactivate user", 
+               description = "Toggle user activation status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<User>> toggleUserActivation(@PathVariable Long userId) {
+        try {
+            User updatedUser = adminService.toggleUserActivation(userId);
+            String action = updatedUser.getIsActive() ? "activated" : "deactivated";
+            return ResponseEntity.ok(ApiResponse.success("User " + action + " successfully", updatedUser));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("User activation toggle failed", e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/reports/revenue")
+    @Operation(summary = "Get revenue report", 
+               description = "Generate revenue report for date range")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<AdminService.RevenueReport>> getRevenueReport(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
+        AdminService.RevenueReport report = adminService.getRevenueReport(startDate, endDate);
+        return ResponseEntity.ok(ApiResponse.success("Revenue report generated", report));
+    }
+    
+    @GetMapping("/reports/oic-regulatory")
+    @Operation(summary = "Get OIC regulatory report", 
+               description = "Generate OIC compliance report for specified date")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<AdminService.OICRegulatoryReport>> getOICRegulatoryReport(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate reportDate) {
+        LocalDate dateToReport = reportDate != null ? reportDate : LocalDate.now();
+        AdminService.OICRegulatoryReport report = adminService.getOICRegulatoryReport(dateToReport);
+        return ResponseEntity.ok(ApiResponse.success("OIC regulatory report generated", report));
+    }
+    
+    @PostMapping("/data-export")
+    @Operation(summary = "Export system data", 
+               description = "Export data for external systems or backup")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<AdminService.DataExport>> exportData(
+            @RequestBody DataExportRequest request) {
+        try {
+            AdminService.DataExport export = adminService.exportData(
+                request.getDataType(), request.getStartDate(), request.getEndDate());
+            return ResponseEntity.ok(ApiResponse.success("Data export initiated", export));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Data export failed", e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/system/configuration")
+    @Operation(summary = "Get system configuration", 
+               description = "Retrieve system configuration settings")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getSystemConfiguration() {
+        Map<String, Object> config = adminService.getSystemConfiguration();
+        return ResponseEntity.ok(ApiResponse.success("System configuration retrieved", config));
+    }
+    
+    @PutMapping("/system/configuration")
+    @Operation(summary = "Update system configuration", 
+               description = "Update system configuration settings")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Map<String, Object>>> updateSystemConfiguration(
+            @RequestBody Map<String, Object> configUpdates) {
+        try {
+            Map<String, Object> updatedConfig = adminService.updateSystemConfiguration(configUpdates);
+            return ResponseEntity.ok(ApiResponse.success("System configuration updated", updatedConfig));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Configuration update failed", e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/system/health")
+    @Operation(summary = "System health check", 
+               description = "Check system health and status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<SystemHealthStatus>> getSystemHealth() {
+        SystemHealthStatus health = new SystemHealthStatus();
+        health.setStatus("UP");
+        health.setUptime("System has been running for 2 days, 3 hours");
+        health.setDatabaseConnected(true);
+        health.setMemoryUsage("512MB / 1024MB (50%)");
+        health.setCpuUsage("25%");
+        health.setDiskUsage("45GB / 100GB (45%)");
+        health.setLastBackup(LocalDate.now().minusDays(1));
+        
+        return ResponseEntity.ok(ApiResponse.success("System health retrieved", health));
+    }
+    
+    @PostMapping("/system/backup")
+    @Operation(summary = "Initiate system backup", 
+               description = "Manually trigger system backup")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<BackupStatus>> initiateBackup() {
+        BackupStatus backup = new BackupStatus();
+        backup.setBackupId("BACKUP_" + System.currentTimeMillis());
+        backup.setStatus("INITIATED");
+        backup.setStartTime(LocalDate.now());
+        backup.setEstimatedDuration("30 minutes");
+        
+        return ResponseEntity.ok(ApiResponse.success("Backup initiated", backup));
+    }
+    
+    @GetMapping("/system/logs")
+    @Operation(summary = "Get system logs", 
+               description = "Retrieve system logs with filtering")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<SystemLog>>> getSystemLogs(
+            @RequestParam(defaultValue = "INFO") String level,
+            @RequestParam(required = false) String component,
+            @RequestParam(defaultValue = "100") int limit) {
+        
+        // In real implementation, fetch from logging system
+        List<SystemLog> logs = List.of(
+            new SystemLog("INFO", "AuthService", "User login successful", LocalDate.now()),
+            new SystemLog("WARN", "PaymentService", "Payment processing slow", LocalDate.now()),
+            new SystemLog("ERROR", "ClaimsService", "File upload failed", LocalDate.now())
+        );
+        
+        return ResponseEntity.ok(ApiResponse.success("System logs retrieved", logs));
+    }
+    
+    @GetMapping("/audit/user-activities")
+    @Operation(summary = "Get user audit trail", 
+               description = "Retrieve user activity audit logs")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<UserActivity>>> getUserActivities(
+            @RequestParam(required = false) Long userId,
+            @RequestParam(required = false) String action,
+            @RequestParam(defaultValue = "100") int limit) {
+        
+        // In real implementation, fetch from audit table
+        List<UserActivity> activities = List.of(
+            new UserActivity(1L, "john.doe", "LOGIN", "Successful login", LocalDate.now()),
+            new UserActivity(2L, "jane.smith", "POLICY_CREATED", "Created policy POL-20250825-ABC123", LocalDate.now()),
+            new UserActivity(1L, "john.doe", "CLAIM_APPROVED", "Approved claim CLM-20250825-XYZ789", LocalDate.now())
+        );
+        
+        return ResponseEntity.ok(ApiResponse.success("User activities retrieved", activities));
+    }
+    
+    // Inner classes for request/response DTOs
+    
+    public static class CreateUserRequest {
+        private User user;
+        private List<Role> roles;
+        
+        public User getUser() { return user; }
+        public void setUser(User user) { this.user = user; }
+        public List<Role> getRoles() { return roles; }
+        public void setRoles(List<Role> roles) { this.roles = roles; }
+    }
+    
+    public static class PasswordResetRequest {
+        private String newPassword;
+        
+        public String getNewPassword() { return newPassword; }
+        public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
+    }
+    
+    public static class DataExportRequest {
+        private String dataType;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        
+        public String getDataType() { return dataType; }
+        public void setDataType(String dataType) { this.dataType = dataType; }
+        public LocalDate getStartDate() { return startDate; }
+        public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+        public LocalDate getEndDate() { return endDate; }
+        public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    }
+    
+    public static class SystemHealthStatus {
+        private String status;
+        private String uptime;
+        private boolean databaseConnected;
+        private String memoryUsage;
+        private String cpuUsage;
+        private String diskUsage;
+        private LocalDate lastBackup;
+        
+        // Getters and setters
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+        public String getUptime() { return uptime; }
+        public void setUptime(String uptime) { this.uptime = uptime; }
+        public boolean isDatabaseConnected() { return databaseConnected; }
+        public void setDatabaseConnected(boolean databaseConnected) { this.databaseConnected = databaseConnected; }
+        public String getMemoryUsage() { return memoryUsage; }
+        public void setMemoryUsage(String memoryUsage) { this.memoryUsage = memoryUsage; }
+        public String getCpuUsage() { return cpuUsage; }
+        public void setCpuUsage(String cpuUsage) { this.cpuUsage = cpuUsage; }
+        public String getDiskUsage() { return diskUsage; }
+        public void setDiskUsage(String diskUsage) { this.diskUsage = diskUsage; }
+        public LocalDate getLastBackup() { return lastBackup; }
+        public void setLastBackup(LocalDate lastBackup) { this.lastBackup = lastBackup; }
+    }
+    
+    public static class BackupStatus {
+        private String backupId;
+        private String status;
+        private LocalDate startTime;
+        private String estimatedDuration;
+        
+        // Getters and setters
+        public String getBackupId() { return backupId; }
+        public void setBackupId(String backupId) { this.backupId = backupId; }
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+        public LocalDate getStartTime() { return startTime; }
+        public void setStartTime(LocalDate startTime) { this.startTime = startTime; }
+        public String getEstimatedDuration() { return estimatedDuration; }
+        public void setEstimatedDuration(String estimatedDuration) { this.estimatedDuration = estimatedDuration; }
+    }
+    
+    public static class SystemLog {
+        private String level;
+        private String component;
+        private String message;
+        private LocalDate timestamp;
+        
+        public SystemLog(String level, String component, String message, LocalDate timestamp) {
+            this.level = level;
+            this.component = component;
+            this.message = message;
+            this.timestamp = timestamp;
+        }
+        
+        // Getters and setters
+        public String getLevel() { return level; }
+        public void setLevel(String level) { this.level = level; }
+        public String getComponent() { return component; }
+        public void setComponent(String component) { this.component = component; }
+        public String getMessage() { return message; }
+        public void setMessage(String message) { this.message = message; }
+        public LocalDate getTimestamp() { return timestamp; }
+        public void setTimestamp(LocalDate timestamp) { this.timestamp = timestamp; }
+    }
+    
+    public static class UserActivity {
+        private Long userId;
+        private String username;
+        private String action;
+        private String details;
+        private LocalDate timestamp;
+        
+        public UserActivity(Long userId, String username, String action, String details, LocalDate timestamp) {
+            this.userId = userId;
+            this.username = username;
+            this.action = action;
+            this.details = details;
+            this.timestamp = timestamp;
+        }
+        
+        // Getters and setters
+        public Long getUserId() { return userId; }
+        public void setUserId(Long userId) { this.userId = userId; }
+        public String getUsername() { return username; }
+        public void setUsername(String username) { this.username = username; }
+        public String getAction() { return action; }
+        public void setAction(String action) { this.action = action; }
+        public String getDetails() { return details; }
+        public void setDetails(String details) { this.details = details; }
+        public LocalDate getTimestamp() { return timestamp; }
+        public void setTimestamp(LocalDate timestamp) { this.timestamp = timestamp; }
+    }
+}

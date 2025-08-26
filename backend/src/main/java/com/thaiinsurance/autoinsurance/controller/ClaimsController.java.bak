@@ -1,0 +1,287 @@
+package com.thaiinsurance.autoinsurance.controller;
+
+import com.thaiinsurance.autoinsurance.dto.ApiResponse;
+import com.thaiinsurance.autoinsurance.dto.ClaimSubmissionRequest;
+import com.thaiinsurance.autoinsurance.model.Claim;
+import com.thaiinsurance.autoinsurance.service.ClaimsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+/**
+ * REST Controller for Claims Management
+ * Handles claim submission, processing, and tracking for Thai auto insurance
+ */
+@RestController
+@RequestMapping("/api/claims")
+@Tag(name = "Claims Management", description = "Thai auto insurance claims processing APIs")
+public class ClaimsController {
+    
+    @Autowired
+    private ClaimsService claimsService;
+    
+    @PostMapping("/submit")
+    @Operation(summary = "Submit new claim", 
+               description = "Submit a new insurance claim with documents and photos")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Claim>> submitClaim(@Valid @ModelAttribute ClaimSubmissionRequest request) {
+        try {
+            Claim claim = claimsService.submitClaim(request);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body(ApiResponse.success("Claim submitted successfully", claim));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Claim submission failed", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error("Claim submission failed", "Internal server error"));
+        }
+    }
+    
+    @GetMapping
+    @Operation(summary = "Get all claims", 
+               description = "Retrieve all claims with pagination")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Page<Claim>>> getAllClaims(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+        
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        Page<Claim> claims = claimsService.getAllClaims(pageable);
+        return ResponseEntity.ok(ApiResponse.success("Claims retrieved successfully", claims));
+    }
+    
+    @GetMapping("/search")
+    @Operation(summary = "Search claims", 
+               description = "Search claims by claim number, policy number, or customer name")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Page<Claim>>> searchClaims(
+            @RequestParam String query,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+        
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDir), sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        
+        Page<Claim> claims = claimsService.searchClaims(query, pageable);
+        return ResponseEntity.ok(ApiResponse.success("Claim search completed", claims));
+    }
+    
+    @GetMapping("/{id}")
+    @Operation(summary = "Get claim by ID", 
+               description = "Retrieve claim details by ID")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Claim>> getClaimById(@PathVariable Long id) {
+        return claimsService.getClaimById(id)
+                .map(claim -> ResponseEntity.ok(ApiResponse.success("Claim found", claim)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+    
+    @GetMapping("/customer/{customerId}")
+    @Operation(summary = "Get claims by customer", 
+               description = "Retrieve all claims for a customer")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<Claim>>> getClaimsByCustomer(@PathVariable Long customerId) {
+        List<Claim> claims = claimsService.getClaimsByCustomer(customerId);
+        return ResponseEntity.ok(ApiResponse.success("Customer claims retrieved", claims));
+    }
+    
+    @GetMapping("/policy/{policyId}")
+    @Operation(summary = "Get claims by policy", 
+               description = "Retrieve all claims for a policy")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<Claim>>> getClaimsByPolicy(@PathVariable Long policyId) {
+        List<Claim> claims = claimsService.getClaimsByPolicy(policyId);
+        return ResponseEntity.ok(ApiResponse.success("Policy claims retrieved", claims));
+    }
+    
+    @PutMapping("/{claimId}/status")
+    @Operation(summary = "Update claim status", 
+               description = "Update claim status with remarks")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Claim>> updateClaimStatus(
+            @PathVariable Long claimId,
+            @RequestBody ClaimStatusUpdateRequest request) {
+        try {
+            Claim updatedClaim = claimsService.updateClaimStatus(
+                claimId, request.getStatus(), request.getRemarks());
+            return ResponseEntity.ok(ApiResponse.success("Claim status updated successfully", updatedClaim));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Status update failed", e.getMessage()));
+        }
+    }
+    
+    @PutMapping("/{claimId}/assign-surveyor")
+    @Operation(summary = "Assign surveyor to claim", 
+               description = "Assign a surveyor to investigate the claim")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Claim>> assignSurveyor(
+            @PathVariable Long claimId,
+            @RequestBody SurveyorAssignmentRequest request) {
+        try {
+            Claim updatedClaim = claimsService.assignSurveyor(
+                claimId, request.getSurveyorName(), request.getSurveyorPhone());
+            return ResponseEntity.ok(ApiResponse.success("Surveyor assigned successfully", updatedClaim));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Surveyor assignment failed", e.getMessage()));
+        }
+    }
+    
+    @PutMapping("/{claimId}/repair-estimate")
+    @Operation(summary = "Set repair estimate", 
+               description = "Set repair cost estimate for the claim")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<Claim>> setRepairEstimate(
+            @PathVariable Long claimId,
+            @RequestBody RepairEstimateRequest request) {
+        try {
+            Claim updatedClaim = claimsService.setRepairEstimate(
+                claimId, request.getEstimatedAmount(), request.getRepairDetails());
+            return ResponseEntity.ok(ApiResponse.success("Repair estimate set successfully", updatedClaim));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Setting repair estimate failed", e.getMessage()));
+        }
+    }
+    
+    @PutMapping("/{claimId}/approve-settlement")
+    @Operation(summary = "Approve settlement", 
+               description = "Approve claim settlement amount")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Claim>> approveSettlement(
+            @PathVariable Long claimId,
+            @RequestBody SettlementApprovalRequest request) {
+        try {
+            Claim updatedClaim = claimsService.approveSettlement(
+                claimId, request.getSettlementAmount(), request.getPaymentMethod());
+            return ResponseEntity.ok(ApiResponse.success("Settlement approved successfully", updatedClaim));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Settlement approval failed", e.getMessage()));
+        }
+    }
+    
+    @GetMapping("/statistics")
+    @Operation(summary = "Get claims statistics", 
+               description = "Get claims count statistics by status")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<ClaimsService.ClaimStatistics>> getStatistics() {
+        ClaimsService.ClaimStatistics stats = claimsService.getStatistics();
+        return ResponseEntity.ok(ApiResponse.success("Claims statistics retrieved", stats));
+    }
+    
+    @GetMapping("/by-status/{status}")
+    @Operation(summary = "Get claims by status", 
+               description = "Retrieve claims by status")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<Claim>>> getClaimsByStatus(@PathVariable Claim.ClaimStatus status) {
+        // This would need to be implemented in the service
+        return ResponseEntity.ok(ApiResponse.success("Claims by status retrieved", List.of()));
+    }
+    
+    @GetMapping("/by-priority/{priority}")
+    @Operation(summary = "Get claims by priority", 
+               description = "Retrieve claims by priority level")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<Claim>>> getClaimsByPriority(@PathVariable Claim.PriorityLevel priority) {
+        // This would need to be implemented in the service
+        return ResponseEntity.ok(ApiResponse.success("Claims by priority retrieved", List.of()));
+    }
+    
+    @GetMapping("/pending-review")
+    @Operation(summary = "Get claims pending review", 
+               description = "Get all claims that are pending review")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<Claim>>> getClaimsPendingReview() {
+        // This would need to be implemented in the service
+        return ResponseEntity.ok(ApiResponse.success("Pending review claims retrieved", List.of()));
+    }
+    
+    @GetMapping("/high-priority")
+    @Operation(summary = "Get high priority claims", 
+               description = "Get all high priority claims requiring immediate attention")
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<List<Claim>>> getHighPriorityClaims() {
+        // This would need to be implemented in the service
+        return ResponseEntity.ok(ApiResponse.success("High priority claims retrieved", List.of()));
+    }
+    
+    @PostMapping("/{claimId}/documents/upload")
+    @Operation(summary = "Upload additional documents", 
+               description = "Upload additional documents for existing claim")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'AGENT', 'ADMIN')")
+    public ResponseEntity<ApiResponse<String>> uploadAdditionalDocuments(
+            @PathVariable Long claimId,
+            @RequestParam("files") List<org.springframework.web.multipart.MultipartFile> files) {
+        try {
+            // This would need to be implemented in the service
+            return ResponseEntity.ok(ApiResponse.success("Documents uploaded successfully", "Files processed"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Document upload failed", e.getMessage()));
+        }
+    }
+    
+    // Inner classes for request DTOs
+    
+    public static class ClaimStatusUpdateRequest {
+        private Claim.ClaimStatus status;
+        private String remarks;
+        
+        public Claim.ClaimStatus getStatus() { return status; }
+        public void setStatus(Claim.ClaimStatus status) { this.status = status; }
+        public String getRemarks() { return remarks; }
+        public void setRemarks(String remarks) { this.remarks = remarks; }
+    }
+    
+    public static class SurveyorAssignmentRequest {
+        private String surveyorName;
+        private String surveyorPhone;
+        
+        public String getSurveyorName() { return surveyorName; }
+        public void setSurveyorName(String surveyorName) { this.surveyorName = surveyorName; }
+        public String getSurveyorPhone() { return surveyorPhone; }
+        public void setSurveyorPhone(String surveyorPhone) { this.surveyorPhone = surveyorPhone; }
+    }
+    
+    public static class RepairEstimateRequest {
+        private BigDecimal estimatedAmount;
+        private String repairDetails;
+        
+        public BigDecimal getEstimatedAmount() { return estimatedAmount; }
+        public void setEstimatedAmount(BigDecimal estimatedAmount) { this.estimatedAmount = estimatedAmount; }
+        public String getRepairDetails() { return repairDetails; }
+        public void setRepairDetails(String repairDetails) { this.repairDetails = repairDetails; }
+    }
+    
+    public static class SettlementApprovalRequest {
+        private BigDecimal settlementAmount;
+        private String paymentMethod;
+        
+        public BigDecimal getSettlementAmount() { return settlementAmount; }
+        public void setSettlementAmount(BigDecimal settlementAmount) { this.settlementAmount = settlementAmount; }
+        public String getPaymentMethod() { return paymentMethod; }
+        public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+    }
+}

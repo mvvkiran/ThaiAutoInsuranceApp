@@ -1,0 +1,180 @@
+<!-- Main Application Layout -->
+<div class="app-container" [class.mobile]="isMobile">
+  
+  <!-- Top Navigation Bar -->
+  <mat-toolbar class="app-toolbar" color="primary" *ngIf="isAuthenticated">
+    
+    <!-- Menu Toggle Button -->
+    <button mat-icon-button 
+            class="menu-toggle-btn"
+            (click)="toggleSidenav()"
+            [attr.aria-label]="translationService.instant('common.menu')">
+      <mat-icon>menu</mat-icon>
+    </button>
+
+    <!-- App Logo and Title -->
+    <div class="app-title" (click)="navigateTo('/dashboard')">
+      <mat-icon class="app-logo">directions_car</mat-icon>
+      <span class="app-name">{{ translationService.instant('common.appName') }}</span>
+    </div>
+
+    <!-- Spacer -->
+    <span class="spacer"></span>
+
+    <!-- Loading Indicator -->
+    <mat-spinner class="loading-indicator" 
+                 diameter="24" 
+                 strokeWidth="2" 
+                 *ngIf="isLoading"></mat-spinner>
+
+    <!-- Notifications -->
+    <button mat-icon-button 
+            class="notification-btn"
+            (click)="navigateTo('/notifications')"
+            [attr.aria-label]="translationService.instant('navigation.notifications')">
+      <mat-icon [matBadge]="unreadNotifications" 
+                [matBadgeHidden]="unreadNotifications === 0"
+                matBadgeColor="warn">
+        notifications
+      </mat-icon>
+    </button>
+
+    <!-- Language Toggle -->
+    <button mat-icon-button 
+            class="language-btn"
+            (click)="toggleLanguage()"
+            [attr.aria-label]="translationService.instant('common.changeLanguage')">
+      <mat-icon>translate</mat-icon>
+      <span class="language-indicator">{{ currentLanguage.toUpperCase() }}</span>
+    </button>
+
+    <!-- User Menu -->
+    <button mat-icon-button 
+            [matMenuTriggerFor]="userMenu"
+            class="user-menu-btn"
+            [attr.aria-label]="translationService.instant('user.userMenu')">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+
+    <!-- User Menu Dropdown -->
+    <mat-menu #userMenu="matMenu" class="user-menu">
+      <div class="user-info">
+        <div class="user-name">{{ getUserDisplayName() }}</div>
+        <div class="user-role">{{ getUserRoleDisplay() }}</div>
+        <div class="user-email">{{ currentUser?.email }}</div>
+      </div>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="navigateTo('/profile')">
+        <mat-icon>person</mat-icon>
+        <span>{{ translationService.instant('navigation.profile') }}</span>
+      </button>
+      <button mat-menu-item (click)="navigateTo('/settings')">
+        <mat-icon>settings</mat-icon>
+        <span>{{ translationService.instant('navigation.settings') }}</span>
+      </button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item (click)="logout()" class="logout-btn">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>{{ translationService.instant('auth.logout') }}</span>
+      </button>
+    </mat-menu>
+
+  </mat-toolbar>
+
+  <!-- Main Content Area with Sidenav -->
+  <mat-sidenav-container class="app-sidenav-container" 
+                         [hasBackdrop]="isMobile"
+                         *ngIf="isAuthenticated">
+    
+    <!-- Side Navigation -->
+    <mat-sidenav class="app-sidenav"
+                 [mode]="isMobile ? 'over' : 'side'"
+                 [opened]="sidenavOpened"
+                 [fixedInViewport]="true"
+                 [fixedTopGap]="isMobile ? 0 : 64">
+      
+      <!-- Navigation Menu -->
+      <mat-nav-list class="navigation-list">
+        
+        <!-- Navigation Items -->
+        <ng-container *ngFor="let item of getNavigationItems()">
+          <mat-list-item class="nav-item"
+                         [class.active]="isRouteActive(item.route)"
+                         (click)="navigateTo(item.route)"
+                         *ngIf="!item.requiresAuth || isAuthenticated">
+            <mat-icon matListIcon>{{ item.icon }}</mat-icon>
+            <span matLine>{{ translationService.instant(item.labelKey) }}</span>
+          </mat-list-item>
+        </ng-container>
+
+        <!-- Admin Section -->
+        <ng-container *ngIf="canAccessAdmin()">
+          <mat-divider></mat-divider>
+          <h3 matSubheader class="section-header">
+            {{ translationService.instant('navigation.admin') }}
+          </h3>
+          <mat-list-item class="nav-item admin-item"
+                         [class.active]="isRouteActive('/admin')"
+                         (click)="navigateTo('/admin')">
+            <mat-icon matListIcon>admin_panel_settings</mat-icon>
+            <span matLine>{{ translationService.instant('navigation.admin') }}</span>
+          </mat-list-item>
+        </ng-container>
+
+      </mat-nav-list>
+
+      <!-- Footer in Sidenav -->
+      <div class="sidenav-footer">
+        <div class="app-version">
+          <small>v1.0.0</small>
+        </div>
+      </div>
+
+    </mat-sidenav>
+
+    <!-- Main Content -->
+    <mat-sidenav-content class="main-content">
+      
+      <!-- Global Loading Overlay -->
+      <div class="global-loading-overlay" *ngIf="isLoading">
+        <div class="loading-content">
+          <mat-spinner diameter="48"></mat-spinner>
+          <p class="loading-text">{{ translationService.instant('common.loading') }}</p>
+        </div>
+      </div>
+
+      <!-- Router Outlet for Page Content -->
+      <div class="page-content">
+        <router-outlet></router-outlet>
+      </div>
+
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+
+  <!-- Login Layout (when not authenticated) -->
+  <div class="login-layout" *ngIf="!isAuthenticated">
+    <router-outlet></router-outlet>
+  </div>
+
+</div>
+
+<!-- PWA Update Notification -->
+<div class="pwa-update-notification" *ngIf="false">
+  <mat-card class="update-card">
+    <mat-card-content>
+      <div class="update-message">
+        <mat-icon>system_update</mat-icon>
+        <span>{{ translationService.instant('pwa.updateAvailable') }}</span>
+      </div>
+    </mat-card-content>
+    <mat-card-actions>
+      <button mat-button color="primary">
+        {{ translationService.instant('pwa.reload') }}
+      </button>
+      <button mat-button>
+        {{ translationService.instant('pwa.later') }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

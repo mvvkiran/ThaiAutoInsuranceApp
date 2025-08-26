@@ -1,0 +1,3077 @@
+openapi: 3.0.3
+info:
+  title: Thai Auto Insurance API
+  version: 1.0.0
+  description: |
+    Comprehensive REST API for Thai Auto Insurance application supporting policy management, claims processing, and customer service operations.
+    
+    ## Features
+    - Multi-language support (Thai/English)
+    - JWT-based authentication
+    - Thai-specific validations (National ID, phone numbers, addresses)
+    - Real-time payment processing
+    - Comprehensive claims management
+    - Regulatory compliance (OIC requirements)
+    
+  contact:
+    name: API Support Team
+    email: api-support@autoinsurance.co.th
+    url: https://docs.autoinsurance.co.th
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://autoinsurance.co.th/terms
+
+servers:
+  - url: https://api.autoinsurance.co.th/api/v1
+    description: Production server
+  - url: https://api-staging.autoinsurance.co.th/api/v1
+    description: Staging server
+  - url: https://api-dev.autoinsurance.co.th/api/v1
+    description: Development server
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Customer Management
+    description: Customer profile and KYC operations
+  - name: Vehicle Management
+    description: Vehicle registration and management
+  - name: Policy Management
+    description: Insurance policy operations
+  - name: Claims Management
+    description: Claims reporting and processing
+  - name: Payment Processing
+    description: Payment methods and transactions
+  - name: Admin Operations
+    description: Administrative and reporting functions
+
+paths:
+  # Authentication APIs
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: User login
+      description: Authenticate user and return JWT tokens
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              customer_login:
+                summary: Customer login
+                value:
+                  email: "somchai@example.com"
+                  password: "SecurePass123!"
+                  deviceInfo:
+                    deviceId: "uuid-device-id"
+                    deviceType: "mobile"
+                    appVersion: "1.0.0"
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register new user
+      description: Create new customer account
+      operationId: registerUser
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegisterResponse'
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/refresh:
+    post:
+      tags: [Authentication]
+      summary: Refresh JWT token
+      description: Get new access token using refresh token
+      operationId: refreshToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+        '401':
+          description: Invalid refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/logout:
+    post:
+      tags: [Authentication]
+      summary: User logout
+      description: Invalidate user session and tokens
+      operationId: logoutUser
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /auth/forgot-password:
+    post:
+      tags: [Authentication]
+      summary: Request password reset
+      description: Send password reset email
+      operationId: forgotPassword
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+      responses:
+        '200':
+          description: Reset email sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  /auth/reset-password:
+    post:
+      tags: [Authentication]
+      summary: Reset password
+      description: Reset password using reset token
+      operationId: resetPassword
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+      responses:
+        '200':
+          description: Password reset successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+
+  # Customer Management APIs
+  /customers/profile:
+    get:
+      tags: [Customer Management]
+      summary: Get customer profile
+      description: Retrieve current customer's profile information
+      operationId: getCustomerProfile
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerProfileResponse'
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags: [Customer Management]
+      summary: Update customer profile
+      description: Update customer profile information
+      operationId: updateCustomerProfile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomerRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCustomerResponse'
+
+  /customers/kyc-verification:
+    post:
+      tags: [Customer Management]
+      summary: Submit KYC verification
+      description: Submit documents for KYC verification
+      operationId: submitKycVerification
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/KycVerificationRequest'
+      responses:
+        '201':
+          description: KYC documents submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KycVerificationResponse'
+
+  /customers/vehicles:
+    get:
+      tags: [Vehicle Management]
+      summary: Get customer vehicles
+      description: Retrieve all vehicles owned by customer
+      operationId: getCustomerVehicles
+      responses:
+        '200':
+          description: Vehicles retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleListResponse'
+
+    post:
+      tags: [Vehicle Management]
+      summary: Add new vehicle
+      description: Register new vehicle for customer
+      operationId: addVehicle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddVehicleRequest'
+      responses:
+        '201':
+          description: Vehicle added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddVehicleResponse'
+
+  # Policy Management APIs
+  /policies/quote:
+    post:
+      tags: [Policy Management]
+      summary: Generate insurance quote
+      description: Calculate insurance premium quote for vehicle
+      operationId: generateQuote
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuoteRequest'
+      responses:
+        '200':
+          description: Quote generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuoteResponse'
+
+  /policies:
+    get:
+      tags: [Policy Management]
+      summary: Get customer policies
+      description: Retrieve all policies for current customer
+      operationId: getCustomerPolicies
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [ACTIVE, EXPIRED, CANCELLED]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Policies retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyListResponse'
+
+    post:
+      tags: [Policy Management]
+      summary: Purchase insurance policy
+      description: Purchase policy from generated quote
+      operationId: purchasePolicy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PurchasePolicyRequest'
+      responses:
+        '201':
+          description: Policy purchased successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PurchasePolicyResponse'
+
+  /policies/{policyId}:
+    get:
+      tags: [Policy Management]
+      summary: Get policy details
+      description: Retrieve detailed policy information
+      operationId: getPolicyDetails
+      parameters:
+        - name: policyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Policy details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PolicyDetailsResponse'
+
+  /policies/{policyId}/renew:
+    put:
+      tags: [Policy Management]
+      summary: Renew policy
+      description: Renew existing policy
+      operationId: renewPolicy
+      parameters:
+        - name: policyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenewPolicyRequest'
+      responses:
+        '200':
+          description: Policy renewed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenewPolicyResponse'
+
+  /policies/{policyId}:
+    delete:
+      tags: [Policy Management]
+      summary: Cancel policy
+      description: Cancel existing policy
+      operationId: cancelPolicy
+      parameters:
+        - name: policyId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelPolicyRequest'
+      responses:
+        '200':
+          description: Policy cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelPolicyResponse'
+
+  # Claims Management APIs
+  /claims:
+    get:
+      tags: [Claims Management]
+      summary: Get customer claims
+      description: Retrieve all claims for current customer
+      operationId: getCustomerClaims
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [REPORTED, UNDER_INVESTIGATION, APPROVED, SETTLED, REJECTED]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Claims retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimListResponse'
+
+    post:
+      tags: [Claims Management]
+      summary: Report new claim
+      description: Report insurance claim with supporting documents
+      operationId: reportClaim
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReportClaimRequest'
+      responses:
+        '201':
+          description: Claim reported successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportClaimResponse'
+
+  /claims/{claimId}:
+    get:
+      tags: [Claims Management]
+      summary: Get claim details
+      description: Retrieve detailed claim information
+      operationId: getClaimDetails
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Claim details retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimDetailsResponse'
+
+  /claims/{claimId}/status:
+    put:
+      tags: [Claims Management]
+      summary: Update claim status
+      description: Update claim processing status (Admin only)
+      operationId: updateClaimStatus
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateClaimStatusRequest'
+      responses:
+        '200':
+          description: Claim status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateClaimStatusResponse'
+
+  /claims/{claimId}/documents:
+    post:
+      tags: [Claims Management]
+      summary: Upload claim documents
+      description: Upload additional supporting documents for claim
+      operationId: uploadClaimDocuments
+      parameters:
+        - name: claimId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UploadDocumentRequest'
+      responses:
+        '201':
+          description: Documents uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadDocumentResponse'
+
+  # Payment Processing APIs
+  /payments/premium:
+    post:
+      tags: [Payment Processing]
+      summary: Process premium payment
+      description: Process insurance premium payment
+      operationId: processPremiumPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequest'
+      responses:
+        '201':
+          description: Payment processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentResponse'
+
+  /payments/history:
+    get:
+      tags: [Payment Processing]
+      summary: Get payment history
+      description: Retrieve customer payment history
+      operationId: getPaymentHistory
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [SUCCESS, FAILED, PENDING, REFUNDED]
+      responses:
+        '200':
+          description: Payment history retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentHistoryResponse'
+
+  /payments/refund:
+    post:
+      tags: [Payment Processing]
+      summary: Process refund
+      description: Process payment refund
+      operationId: processRefund
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundRequest'
+      responses:
+        '201':
+          description: Refund processed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundResponse'
+
+  /payments/methods:
+    get:
+      tags: [Payment Processing]
+      summary: Get available payment methods
+      description: Retrieve supported payment methods
+      operationId: getPaymentMethods
+      responses:
+        '200':
+          description: Payment methods retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentMethodsResponse'
+
+  # Admin APIs
+  /admin/customers:
+    get:
+      tags: [Admin Operations]
+      summary: Get all customers (Admin)
+      description: Retrieve paginated list of all customers
+      operationId: getAllCustomers
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [ACTIVE, INACTIVE, SUSPENDED]
+      responses:
+        '200':
+          description: Customers retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminCustomerListResponse'
+
+  /admin/policies:
+    get:
+      tags: [Admin Operations]
+      summary: Get all policies (Admin)
+      description: Retrieve paginated list of all policies
+      operationId: getAllPolicies
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [ACTIVE, EXPIRED, CANCELLED]
+      responses:
+        '200':
+          description: Policies retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminPolicyListResponse'
+
+  /admin/claims:
+    get:
+      tags: [Admin Operations]
+      summary: Get all claims (Admin)
+      description: Retrieve paginated list of all claims
+      operationId: getAllClaims
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 50
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [REPORTED, UNDER_INVESTIGATION, APPROVED, SETTLED, REJECTED]
+      responses:
+        '200':
+          description: Claims retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdminClaimListResponse'
+
+  /admin/reports:
+    get:
+      tags: [Admin Operations]
+      summary: Generate business reports (Admin)
+      description: Generate various business and regulatory reports
+      operationId: generateReports
+      parameters:
+        - name: reportType
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [MONTHLY_STATISTICS, CLAIMS_REPORT, REVENUE_REPORT, OIC_REGULATORY]
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [PDF, EXCEL, JSON]
+            default: PDF
+      responses:
+        '200':
+          description: Report generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from login endpoint
+
+  schemas:
+    # Authentication Schemas
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "somchai@example.com"
+        password:
+          type: string
+          minLength: 8
+          example: "SecurePass123!"
+        deviceInfo:
+          $ref: '#/components/schemas/DeviceInfo'
+
+    DeviceInfo:
+      type: object
+      properties:
+        deviceId:
+          type: string
+          example: "uuid-device-id"
+        deviceType:
+          type: string
+          enum: [mobile, desktop, tablet]
+          example: "mobile"
+        appVersion:
+          type: string
+          example: "1.0.0"
+
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            refreshToken:
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            tokenType:
+              type: string
+              example: "Bearer"
+            expiresIn:
+              type: integer
+              example: 3600
+            user:
+              $ref: '#/components/schemas/UserProfile'
+        timestamp:
+          type: string
+          format: date-time
+
+    UserProfile:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        email:
+          type: string
+          format: email
+          example: "somchai@example.com"
+        firstName:
+          type: string
+          example: "สมชาย"
+        lastName:
+          type: string
+          example: "ใจดี"
+        role:
+          type: string
+          enum: [CUSTOMER, AGENT, ADMIN]
+          example: "CUSTOMER"
+        permissions:
+          type: array
+          items:
+            type: string
+          example: ["VIEW_POLICIES", "CREATE_CLAIMS"]
+
+    RegisterRequest:
+      type: object
+      required:
+        - personalInfo
+        - contactInfo
+        - credentials
+        - consent
+      properties:
+        personalInfo:
+          $ref: '#/components/schemas/PersonalInfo'
+        contactInfo:
+          $ref: '#/components/schemas/ContactInfo'
+        credentials:
+          $ref: '#/components/schemas/Credentials'
+        consent:
+          $ref: '#/components/schemas/ConsentInfo'
+
+    PersonalInfo:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - nationalId
+        - dateOfBirth
+        - gender
+      properties:
+        firstName:
+          type: string
+          example: "สมชาย"
+        lastName:
+          type: string
+          example: "ใจดี"
+        firstNameEn:
+          type: string
+          example: "Somchai"
+        lastNameEn:
+          type: string
+          example: "Jaidee"
+        nationalId:
+          type: string
+          pattern: '^[0-9]{13}$'
+          example: "1234567890123"
+        dateOfBirth:
+          type: string
+          format: date
+          example: "1990-01-15"
+        gender:
+          type: string
+          enum: [MALE, FEMALE, OTHER]
+          example: "MALE"
+
+    ContactInfo:
+      type: object
+      required:
+        - email
+        - phoneNumber
+        - address
+      properties:
+        email:
+          type: string
+          format: email
+          example: "somchai@example.com"
+        phoneNumber:
+          type: string
+          pattern: '^\+66[0-9]{9}$'
+          example: "+66812345678"
+        preferredLanguage:
+          type: string
+          enum: [th, en]
+          default: th
+          example: "th"
+        address:
+          $ref: '#/components/schemas/Address'
+
+    Address:
+      type: object
+      required:
+        - addressLine1
+        - tambon
+        - amphoe
+        - province
+        - postalCode
+        - country
+      properties:
+        addressLine1:
+          type: string
+          example: "123/45 หมู่ 2"
+        addressLine2:
+          type: string
+          example: "ถนนสุขุมวิท"
+        tambon:
+          type: string
+          example: "คลองตัน"
+        amphoe:
+          type: string
+          example: "วัฒนา"
+        province:
+          type: string
+          example: "กรุงเทพมหานคร"
+        postalCode:
+          type: string
+          pattern: '^[0-9]{5}$'
+          example: "10110"
+        country:
+          type: string
+          enum: [TH]
+          default: TH
+          example: "TH"
+
+    Credentials:
+      type: object
+      required:
+        - email
+        - password
+        - confirmPassword
+      properties:
+        email:
+          type: string
+          format: email
+          example: "somchai@example.com"
+        password:
+          type: string
+          minLength: 8
+          pattern: '^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]'
+          example: "SecurePass123!"
+        confirmPassword:
+          type: string
+          example: "SecurePass123!"
+
+    ConsentInfo:
+      type: object
+      required:
+        - termsAndConditions
+        - privacyPolicy
+        - dataProcessingConsent
+      properties:
+        termsAndConditions:
+          type: boolean
+          example: true
+        privacyPolicy:
+          type: boolean
+          example: true
+        marketingConsent:
+          type: boolean
+          default: false
+          example: false
+        dataProcessingConsent:
+          type: boolean
+          example: true
+
+    RegisterResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            customerId:
+              type: string
+              format: uuid
+              example: "550e8400-e29b-41d4-a716-446655440000"
+            verificationRequired:
+              type: boolean
+              example: true
+            verificationMethods:
+              type: array
+              items:
+                type: string
+                enum: [EMAIL, SMS]
+              example: ["EMAIL", "SMS"]
+            message:
+              type: string
+              example: "Registration successful. Please verify your email and phone number."
+        timestamp:
+          type: string
+          format: date-time
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+
+    RefreshTokenResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            accessToken:
+              type: string
+              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+            expiresIn:
+              type: integer
+              example: 3600
+        timestamp:
+          type: string
+          format: date-time
+
+    ForgotPasswordRequest:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          format: email
+          example: "somchai@example.com"
+
+    ResetPasswordRequest:
+      type: object
+      required:
+        - token
+        - newPassword
+      properties:
+        token:
+          type: string
+          example: "reset-token-uuid"
+        newPassword:
+          type: string
+          minLength: 8
+          example: "NewSecurePass123!"
+
+    # Customer Management Schemas
+    CustomerProfileResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            personalInfo:
+              $ref: '#/components/schemas/PersonalInfo'
+            contactInfo:
+              $ref: '#/components/schemas/ContactInfo'
+            accountStatus:
+              type: string
+              enum: [ACTIVE, INACTIVE, SUSPENDED, PENDING_VERIFICATION]
+            kycStatus:
+              type: string
+              enum: [PENDING, VERIFIED, REJECTED]
+            createdAt:
+              type: string
+              format: date-time
+            lastLoginAt:
+              type: string
+              format: date-time
+        timestamp:
+          type: string
+          format: date-time
+
+    UpdateCustomerRequest:
+      type: object
+      properties:
+        contactInfo:
+          $ref: '#/components/schemas/ContactInfo'
+
+    UpdateCustomerResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "Profile updated successfully"
+            updatedFields:
+              type: array
+              items:
+                type: string
+              example: ["phoneNumber", "address"]
+        timestamp:
+          type: string
+          format: date-time
+
+    KycVerificationRequest:
+      type: object
+      required:
+        - idCardFront
+        - idCardBack
+      properties:
+        idCardFront:
+          type: string
+          format: binary
+          description: Front side of Thai National ID Card
+        idCardBack:
+          type: string
+          format: binary
+          description: Back side of Thai National ID Card
+        selfie:
+          type: string
+          format: binary
+          description: Customer selfie for face verification
+        addressProof:
+          type: string
+          format: binary
+          description: Utility bill or bank statement
+
+    KycVerificationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            verificationId:
+              type: string
+              format: uuid
+            status:
+              type: string
+              enum: [SUBMITTED, UNDER_REVIEW, APPROVED, REJECTED]
+            estimatedProcessingTime:
+              type: string
+              example: "2-3 business days"
+            message:
+              type: string
+              example: "KYC documents submitted successfully"
+        timestamp:
+          type: string
+          format: date-time
+
+    # Vehicle Management Schemas
+    VehicleListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            vehicles:
+              type: array
+              items:
+                $ref: '#/components/schemas/Vehicle'
+            totalCount:
+              type: integer
+              example: 2
+        timestamp:
+          type: string
+          format: date-time
+
+    Vehicle:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        registrationNumber:
+          type: string
+          example: "กข1234"
+        province:
+          type: string
+          example: "กรุงเทพมหานคร"
+        vehicleInfo:
+          $ref: '#/components/schemas/VehicleInfo'
+        currentPolicy:
+          $ref: '#/components/schemas/PolicySummary'
+        dltStatus:
+          $ref: '#/components/schemas/DltStatus'
+        isActive:
+          type: boolean
+          example: true
+
+    VehicleInfo:
+      type: object
+      properties:
+        make:
+          type: string
+          example: "Toyota"
+        model:
+          type: string
+          example: "Camry"
+        year:
+          type: integer
+          minimum: 1950
+          maximum: 2030
+          example: 2020
+        engineSize:
+          type: number
+          format: float
+          example: 2.0
+        fuelType:
+          type: string
+          enum: [GASOLINE, DIESEL, HYBRID, ELECTRIC, CNG, LPG]
+          example: "GASOLINE"
+        vehicleType:
+          type: string
+          enum: [SEDAN, HATCHBACK, SUV, PICKUP, MOTORCYCLE, VAN]
+          example: "SEDAN"
+        color:
+          type: string
+          example: "WHITE"
+        chassisNumber:
+          type: string
+          example: "JTDBE30E500123456"
+
+    PolicySummary:
+      type: object
+      properties:
+        policyId:
+          type: string
+          format: uuid
+        policyNumber:
+          type: string
+          example: "POL-2024-001234"
+        status:
+          type: string
+          enum: [ACTIVE, EXPIRED, CANCELLED]
+        expiryDate:
+          type: string
+          format: date
+
+    DltStatus:
+      type: object
+      properties:
+        registrationValid:
+          type: boolean
+        taxPaid:
+          type: boolean
+        expiryDate:
+          type: string
+          format: date
+
+    AddVehicleRequest:
+      type: object
+      required:
+        - registrationNumber
+        - province
+        - vehicleInfo
+        - usage
+      properties:
+        registrationNumber:
+          type: string
+          example: "กข1234"
+        province:
+          type: string
+          example: "กรุงเทพมหานคร"
+        vehicleInfo:
+          $ref: '#/components/schemas/VehicleInfo'
+        usage:
+          $ref: '#/components/schemas/VehicleUsage'
+
+    VehicleUsage:
+      type: object
+      properties:
+        usageType:
+          type: string
+          enum: [PERSONAL, COMMERCIAL, RENTAL]
+          example: "PERSONAL"
+        annualMileage:
+          type: integer
+          example: 15000
+        parkingLocation:
+          type: string
+          enum: [GARAGE, STREET, COVERED_PARKING, UNCOVERED_PARKING]
+          example: "GARAGE"
+
+    AddVehicleResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            vehicleId:
+              type: string
+              format: uuid
+            registrationNumber:
+              type: string
+              example: "กข1234"
+            dltVerification:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: "VERIFIED"
+                verifiedAt:
+                  type: string
+                  format: date-time
+                expiryDate:
+                  type: string
+                  format: date
+                taxStatus:
+                  type: string
+                  example: "PAID"
+            message:
+              type: string
+              example: "Vehicle added and verified successfully"
+        timestamp:
+          type: string
+          format: date-time
+
+    # Policy Management Schemas
+    QuoteRequest:
+      type: object
+      required:
+        - vehicleId
+        - quoteRequest
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        vehicleId:
+          type: string
+          format: uuid
+        quoteRequest:
+          $ref: '#/components/schemas/QuoteRequestDetails'
+
+    QuoteRequestDetails:
+      type: object
+      required:
+        - policyType
+        - policyPeriod
+      properties:
+        policyType:
+          type: string
+          enum: [CMI, CLASS_1, CLASS_2, CLASS_3]
+          example: "CLASS_1"
+        coverageOptions:
+          $ref: '#/components/schemas/CoverageOptions'
+        discounts:
+          $ref: '#/components/schemas/DiscountOptions'
+        policyPeriod:
+          $ref: '#/components/schemas/PolicyPeriod'
+
+    CoverageOptions:
+      type: object
+      properties:
+        deductible:
+          type: number
+          format: float
+          example: 5000.00
+        medicalExpenses:
+          type: number
+          format: float
+          example: 100000.00
+        personalAccident:
+          type: number
+          format: float
+          example: 200000.00
+        bailBond:
+          type: number
+          format: float
+          example: 50000.00
+        propertyDamage:
+          type: number
+          format: float
+          example: 1000000.00
+
+    DiscountOptions:
+      type: object
+      properties:
+        noClaimDiscount:
+          type: boolean
+          example: true
+        multiVehicleDiscount:
+          type: boolean
+          example: false
+        loyaltyDiscount:
+          type: boolean
+          example: true
+
+    PolicyPeriod:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - periodMonths
+      properties:
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type: string
+          format: date
+        periodMonths:
+          type: integer
+          minimum: 1
+          maximum: 12
+          example: 12
+
+    QuoteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            quoteId:
+              type: string
+              format: uuid
+            quoteNumber:
+              type: string
+              example: "QT-2024-123456"
+            validUntil:
+              type: string
+              format: date-time
+            premium:
+              $ref: '#/components/schemas/PremiumBreakdown'
+            coverage:
+              $ref: '#/components/schemas/CoverageDetails'
+            paymentOptions:
+              type: array
+              items:
+                $ref: '#/components/schemas/PaymentOption'
+        timestamp:
+          type: string
+          format: date-time
+
+    PremiumBreakdown:
+      type: object
+      properties:
+        basePremium:
+          type: number
+          format: float
+          example: 15000.00
+        discounts:
+          type: object
+          properties:
+            noClaimDiscount:
+              type: number
+              format: float
+              example: -1500.00
+            loyaltyDiscount:
+              type: number
+              format: float
+              example: -500.00
+            totalDiscounts:
+              type: number
+              format: float
+              example: -2000.00
+        fees:
+          type: object
+          properties:
+            oicFund:
+              type: number
+              format: float
+              example: 50.00
+            stamp:
+              type: number
+              format: float
+              example: 1.00
+            vat:
+              type: number
+              format: float
+              example: 910.00
+            totalFees:
+              type: number
+              format: float
+              example: 961.00
+        netPremium:
+          type: number
+          format: float
+          example: 13000.00
+        totalPremium:
+          type: number
+          format: float
+          example: 13961.00
+
+    CoverageDetails:
+      type: object
+      properties:
+        policyType:
+          type: string
+          example: "CLASS_1"
+        deductible:
+          type: number
+          format: float
+        coverageDetails:
+          type: object
+          properties:
+            thirdPartyLiability:
+              type: object
+              properties:
+                bodilyInjuryPerPerson:
+                  type: number
+                  format: float
+                bodilyInjuryPerAccident:
+                  type: number
+                  format: float
+                propertyDamage:
+                  type: number
+                  format: float
+            ownDamage:
+              type: object
+              properties:
+                vehicleValue:
+                  type: number
+                  format: float
+                deductible:
+                  type: number
+                  format: float
+            medicalExpenses:
+              type: number
+              format: float
+            personalAccident:
+              type: number
+              format: float
+
+    PaymentOption:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [FULL_PAYMENT, INSTALLMENT_6, INSTALLMENT_12]
+        amount:
+          type: number
+          format: float
+        discount:
+          type: number
+          format: float
+        finalAmount:
+          type: number
+          format: float
+        monthlyAmount:
+          type: number
+          format: float
+        totalAmount:
+          type: number
+          format: float
+        interestRate:
+          type: number
+          format: float
+
+    PolicyListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            policies:
+              type: array
+              items:
+                $ref: '#/components/schemas/PolicySummaryExtended'
+            pagination:
+              $ref: '#/components/schemas/Pagination'
+        timestamp:
+          type: string
+          format: date-time
+
+    PolicySummaryExtended:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        policyNumber:
+          type: string
+        policyType:
+          type: string
+        status:
+          type: string
+        effectiveDate:
+          type: string
+          format: date
+        expiryDate:
+          type: string
+          format: date
+        premium:
+          type: number
+          format: float
+        vehicle:
+          $ref: '#/components/schemas/VehicleSummary'
+
+    VehicleSummary:
+      type: object
+      properties:
+        registrationNumber:
+          type: string
+        make:
+          type: string
+        model:
+          type: string
+        year:
+          type: integer
+
+    PurchasePolicyRequest:
+      type: object
+      required:
+        - quoteId
+        - paymentInfo
+        - beneficiary
+      properties:
+        quoteId:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+          format: uuid
+        paymentInfo:
+          $ref: '#/components/schemas/PaymentInfo'
+        beneficiary:
+          $ref: '#/components/schemas/BeneficiaryInfo'
+        additionalOptions:
+          $ref: '#/components/schemas/AdditionalOptions'
+
+    PaymentInfo:
+      type: object
+      required:
+        - paymentOption
+        - paymentMethod
+        - paymentDetails
+      properties:
+        paymentOption:
+          type: string
+          enum: [FULL_PAYMENT, INSTALLMENT_6, INSTALLMENT_12]
+        paymentMethod:
+          type: string
+          enum: [CREDIT_CARD, BANK_TRANSFER, PROMPTPAY, E_WALLET]
+        paymentDetails:
+          type: object
+          properties:
+            cardToken:
+              type: string
+              example: "encrypted-card-token"
+            cardLast4:
+              type: string
+              example: "1234"
+            cardType:
+              type: string
+              example: "VISA"
+
+    BeneficiaryInfo:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [SELF, SPOUSE, PARENT, CHILD, OTHER]
+        relationship:
+          type: string
+        personalInfo:
+          $ref: '#/components/schemas/PersonalInfo'
+
+    AdditionalOptions:
+      type: object
+      properties:
+        autoRenewal:
+          type: boolean
+          default: false
+        digitalDocuments:
+          type: boolean
+          default: true
+        smsNotifications:
+          type: boolean
+          default: true
+
+    PurchasePolicyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            policyId:
+              type: string
+              format: uuid
+            policyNumber:
+              type: string
+              example: "POL-2024-567890"
+            status:
+              type: string
+              example: "ACTIVE"
+            effectiveDate:
+              type: string
+              format: date-time
+            expiryDate:
+              type: string
+              format: date-time
+            premium:
+              type: object
+              properties:
+                totalPremium:
+                  type: number
+                  format: float
+                paymentStatus:
+                  type: string
+                paymentMethod:
+                  type: string
+                transactionId:
+                  type: string
+            documents:
+              type: object
+              properties:
+                policyDocument:
+                  type: string
+                  format: uri
+                certificate:
+                  type: string
+                  format: uri
+                taxInvoice:
+                  type: string
+                  format: uri
+            nextPaymentDue:
+              type: string
+              format: date
+            message:
+              type: string
+              example: "Policy purchased successfully. Documents sent via email."
+        timestamp:
+          type: string
+          format: date-time
+
+    PolicyDetailsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/PolicyDetails'
+        timestamp:
+          type: string
+          format: date-time
+
+    PolicyDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        policyNumber:
+          type: string
+        customer:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+        vehicle:
+          $ref: '#/components/schemas/VehicleSummary'
+        coverage:
+          $ref: '#/components/schemas/PolicyCoverage'
+        premium:
+          $ref: '#/components/schemas/PremiumBreakdown'
+        status:
+          type: string
+        renewalInfo:
+          $ref: '#/components/schemas/RenewalInfo'
+        documents:
+          type: array
+          items:
+            $ref: '#/components/schemas/PolicyDocument'
+
+    PolicyCoverage:
+      type: object
+      properties:
+        policyType:
+          type: string
+        effectiveDate:
+          type: string
+          format: date-time
+        expiryDate:
+          type: string
+          format: date-time
+        coverageDetails:
+          $ref: '#/components/schemas/CoverageDetails'
+
+    RenewalInfo:
+      type: object
+      properties:
+        autoRenewal:
+          type: boolean
+        renewalDate:
+          type: string
+          format: date
+        noClaimDiscount:
+          type: number
+          format: float
+
+    PolicyDocument:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [POLICY_DOCUMENT, CERTIFICATE, TAX_INVOICE]
+        url:
+          type: string
+          format: uri
+        generatedAt:
+          type: string
+          format: date-time
+
+    RenewPolicyRequest:
+      type: object
+      properties:
+        renewalOptions:
+          type: object
+          properties:
+            coverageChanges:
+              $ref: '#/components/schemas/CoverageOptions'
+            paymentPlan:
+              type: string
+              enum: [FULL_PAYMENT, INSTALLMENT_6, INSTALLMENT_12]
+        paymentMethod:
+          $ref: '#/components/schemas/PaymentInfo'
+
+    RenewPolicyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            renewedPolicyId:
+              type: string
+              format: uuid
+            renewedPolicyNumber:
+              type: string
+            effectiveDate:
+              type: string
+              format: date-time
+            expiryDate:
+              type: string
+              format: date-time
+            premium:
+              type: object
+              properties:
+                newTotalPremium:
+                  type: number
+                  format: float
+                noClaimDiscount:
+                  type: number
+                  format: float
+                finalPremium:
+                  type: number
+                  format: float
+            message:
+              type: string
+              example: "Policy renewed successfully with updated coverage"
+        timestamp:
+          type: string
+          format: date-time
+
+    CancelPolicyRequest:
+      type: object
+      required:
+        - cancellationReason
+        - effectiveDate
+      properties:
+        cancellationReason:
+          type: string
+          enum: [VEHICLE_SOLD, MOVED_ABROAD, FINANCIAL_REASONS, DISSATISFIED, OTHER]
+        effectiveDate:
+          type: string
+          format: date
+        documents:
+          type: object
+          properties:
+            proofOfSale:
+              type: string
+              format: uuid
+
+    CancelPolicyResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            cancellationId:
+              type: string
+              format: uuid
+            effectiveDate:
+              type: string
+              format: date-time
+            refund:
+              type: object
+              properties:
+                refundAmount:
+                  type: number
+                  format: float
+                refundMethod:
+                  type: string
+                processingTime:
+                  type: string
+            message:
+              type: string
+              example: "Policy cancellation processed. Refund will be processed within 5-7 business days."
+        timestamp:
+          type: string
+          format: date-time
+
+    # Claims Management Schemas
+    ClaimListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            claims:
+              type: array
+              items:
+                $ref: '#/components/schemas/ClaimSummary'
+            pagination:
+              $ref: '#/components/schemas/Pagination'
+        timestamp:
+          type: string
+          format: date-time
+
+    ClaimSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        claimNumber:
+          type: string
+        policyNumber:
+          type: string
+        incidentType:
+          type: string
+        incidentDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [REPORTED, UNDER_INVESTIGATION, APPROVED, SETTLED, REJECTED]
+        estimatedAmount:
+          type: number
+          format: float
+        reportedAt:
+          type: string
+          format: date-time
+
+    ReportClaimRequest:
+      type: object
+      required:
+        - policyId
+        - claimType
+        - incidentDate
+        - description
+      properties:
+        policyId:
+          type: string
+          format: uuid
+        claimType:
+          type: string
+          enum: [ACCIDENT, THEFT, FIRE, FLOOD, VANDALISM, NATURAL_DISASTER]
+        incidentDate:
+          type: string
+          format: date-time
+        incidentLocation:
+          $ref: '#/components/schemas/IncidentLocation'
+        description:
+          type: string
+          minLength: 10
+          maxLength: 1000
+        policeReportNumber:
+          type: string
+        otherPartyInfo:
+          $ref: '#/components/schemas/OtherPartyInfo'
+        damageDescription:
+          type: string
+        injuryDescription:
+          type: string
+        photos:
+          type: array
+          items:
+            type: string
+            format: binary
+        videos:
+          type: array
+          items:
+            type: string
+            format: binary
+        documents:
+          type: array
+          items:
+            type: string
+            format: binary
+
+    IncidentLocation:
+      type: object
+      properties:
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+        address:
+          type: string
+        landmark:
+          type: string
+
+    OtherPartyInfo:
+      type: object
+      properties:
+        driverName:
+          type: string
+        licenseNumber:
+          type: string
+        vehicleRegistration:
+          type: string
+        insuranceCompany:
+          type: string
+
+    ReportClaimResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            claimId:
+              type: string
+              format: uuid
+            claimNumber:
+              type: string
+              example: "CLM-2024-123456"
+            status:
+              type: string
+              example: "REPORTED"
+            reportedAt:
+              type: string
+              format: date-time
+            estimatedProcessingTime:
+              type: string
+              example: "7-10 business days"
+            assignedAdjuster:
+              $ref: '#/components/schemas/AssignedAdjuster'
+            nextSteps:
+              type: array
+              items:
+                type: string
+            trackingUrl:
+              type: string
+              format: uri
+            message:
+              type: string
+              example: "Claim reported successfully. You will receive updates via SMS and email."
+        timestamp:
+          type: string
+          format: date-time
+
+    AssignedAdjuster:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+
+    ClaimDetailsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          $ref: '#/components/schemas/ClaimDetails'
+        timestamp:
+          type: string
+          format: date-time
+
+    ClaimDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        claimNumber:
+          type: string
+        policy:
+          type: object
+          properties:
+            policyNumber:
+              type: string
+            coverageType:
+              type: string
+        incident:
+          $ref: '#/components/schemas/IncidentDetails'
+        damages:
+          $ref: '#/components/schemas/DamageAssessment'
+        assessment:
+          $ref: '#/components/schemas/ClaimAssessment'
+        repairShop:
+          $ref: '#/components/schemas/RepairShopInfo'
+        status:
+          type: string
+        settlement:
+          $ref: '#/components/schemas/SettlementInfo'
+
+    IncidentDetails:
+      type: object
+      properties:
+        type:
+          type: string
+        date:
+          type: string
+          format: date-time
+        location:
+          $ref: '#/components/schemas/IncidentLocation'
+        description:
+          type: string
+        policeReportNumber:
+          type: string
+
+    DamageAssessment:
+      type: object
+      properties:
+        vehicleDamage:
+          type: object
+          properties:
+            estimatedCost:
+              type: number
+              format: float
+            description:
+              type: string
+            photos:
+              type: array
+              items:
+                type: string
+                format: uri
+        medicalExpenses:
+          type: object
+          properties:
+            estimatedCost:
+              type: number
+              format: float
+            description:
+              type: string
+            hospitalReports:
+              type: array
+              items:
+                type: string
+                format: uri
+
+    ClaimAssessment:
+      type: object
+      properties:
+        surveyor:
+          $ref: '#/components/schemas/Surveyor'
+        assessmentDate:
+          type: string
+          format: date-time
+        estimatedRepairCost:
+          type: number
+          format: float
+        deductible:
+          type: number
+          format: float
+        approvedAmount:
+          type: number
+          format: float
+
+    Surveyor:
+      type: object
+      properties:
+        name:
+          type: string
+        licenseNumber:
+          type: string
+        phone:
+          type: string
+
+    RepairShopInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        estimatedCompletionDate:
+          type: string
+          format: date
+
+    SettlementInfo:
+      type: object
+      properties:
+        approvedAmount:
+          type: number
+          format: float
+        paymentMethod:
+          type: string
+          enum: [DIRECT_REPAIR, CASH_SETTLEMENT, BANK_TRANSFER]
+        paymentDate:
+          type: string
+          format: date
+
+    UpdateClaimStatusRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          enum: [UNDER_INVESTIGATION, APPROVED, SETTLED, REJECTED]
+        notes:
+          type: string
+        assignedTo:
+          type: string
+
+    UpdateClaimStatusResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            claimId:
+              type: string
+              format: uuid
+            previousStatus:
+              type: string
+            newStatus:
+              type: string
+            updatedAt:
+              type: string
+              format: date-time
+            updatedBy:
+              type: string
+            message:
+              type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    UploadDocumentRequest:
+      type: object
+      required:
+        - documentType
+        - document
+      properties:
+        documentType:
+          type: string
+          enum: [POLICE_REPORT, MEDICAL_REPORT, REPAIR_ESTIMATE, PHOTOS, OTHER]
+        description:
+          type: string
+        document:
+          type: string
+          format: binary
+
+    UploadDocumentResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            documentId:
+              type: string
+              format: uuid
+            documentType:
+              type: string
+            fileName:
+              type: string
+            uploadedAt:
+              type: string
+              format: date-time
+            status:
+              type: string
+              example: "RECEIVED"
+            message:
+              type: string
+              example: "Document uploaded successfully"
+        timestamp:
+          type: string
+          format: date-time
+
+    # Payment Processing Schemas
+    PaymentRequest:
+      type: object
+      required:
+        - policyId
+        - paymentType
+        - amount
+        - paymentMethod
+      properties:
+        policyId:
+          type: string
+          format: uuid
+        paymentType:
+          type: string
+          enum: [PREMIUM, INSTALLMENT, CLAIM_SETTLEMENT, REFUND]
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+          enum: [THB]
+          default: THB
+        paymentMethod:
+          $ref: '#/components/schemas/PaymentMethodDetails'
+        billingAddress:
+          $ref: '#/components/schemas/Address'
+        customerInfo:
+          type: object
+          properties:
+            email:
+              type: string
+              format: email
+            phone:
+              type: string
+
+    PaymentMethodDetails:
+      type: object
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum: [CREDIT_CARD, BANK_TRANSFER, PROMPTPAY, E_WALLET]
+        cardInfo:
+          $ref: '#/components/schemas/CreditCardInfo'
+        bankTransferInfo:
+          $ref: '#/components/schemas/BankTransferInfo'
+        eWalletInfo:
+          $ref: '#/components/schemas/EWalletInfo'
+
+    CreditCardInfo:
+      type: object
+      properties:
+        cardToken:
+          type: string
+          description: Encrypted card token from payment gateway
+        cardHolderName:
+          type: string
+        expiryMonth:
+          type: integer
+          minimum: 1
+          maximum: 12
+        expiryYear:
+          type: integer
+          minimum: 2024
+        cvv:
+          type: string
+          description: Encrypted CVV
+
+    BankTransferInfo:
+      type: object
+      properties:
+        bankCode:
+          type: string
+          enum: [SCB, KTB, BBL, KBANK, TMB, BAY]
+        accountNumber:
+          type: string
+
+    EWalletInfo:
+      type: object
+      properties:
+        walletType:
+          type: string
+          enum: [TRUEMONEY, RABBIT_LINE_PAY, K_PLUS]
+        walletId:
+          type: string
+
+    PaymentResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            paymentId:
+              type: string
+              format: uuid
+            transactionId:
+              type: string
+            status:
+              type: string
+              enum: [PROCESSING, SUCCESS, FAILED, PENDING_3DS]
+            amount:
+              type: number
+              format: float
+            currency:
+              type: string
+            paymentMethod:
+              type: object
+              properties:
+                type:
+                  type: string
+                maskedCardNumber:
+                  type: string
+                cardType:
+                  type: string
+            fees:
+              type: object
+              properties:
+                processingFee:
+                  type: number
+                  format: float
+                totalAmount:
+                  type: number
+                  format: float
+            threeDSecure:
+              type: object
+              properties:
+                required:
+                  type: boolean
+                redirectUrl:
+                  type: string
+                  format: uri
+            receipt:
+              type: object
+              properties:
+                receiptNumber:
+                  type: string
+                issuedAt:
+                  type: string
+                  format: date-time
+            message:
+              type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    PaymentHistoryResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            payments:
+              type: array
+              items:
+                $ref: '#/components/schemas/PaymentHistoryItem'
+            pagination:
+              $ref: '#/components/schemas/Pagination'
+            summary:
+              $ref: '#/components/schemas/PaymentSummary'
+        timestamp:
+          type: string
+          format: date-time
+
+    PaymentHistoryItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        transactionId:
+          type: string
+        policyNumber:
+          type: string
+        paymentType:
+          type: string
+        amount:
+          type: number
+          format: float
+        fees:
+          type: number
+          format: float
+        totalAmount:
+          type: number
+          format: float
+        currency:
+          type: string
+        paymentMethod:
+          type: object
+          properties:
+            type:
+              type: string
+            last4:
+              type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+        receipt:
+          type: object
+          properties:
+            receiptNumber:
+              type: string
+            receiptUrl:
+              type: string
+              format: uri
+        taxInvoice:
+          type: object
+          properties:
+            invoiceNumber:
+              type: string
+            invoiceUrl:
+              type: string
+              format: uri
+
+    PaymentSummary:
+      type: object
+      properties:
+        totalPaid:
+          type: number
+          format: float
+        totalTransactions:
+          type: integer
+        averageAmount:
+          type: number
+          format: float
+
+    RefundRequest:
+      type: object
+      required:
+        - paymentId
+        - refundAmount
+        - refundReason
+      properties:
+        paymentId:
+          type: string
+          format: uuid
+        refundAmount:
+          type: number
+          format: float
+        refundReason:
+          type: string
+          enum: [POLICY_CANCELLATION, OVERPAYMENT, DUPLICATE_PAYMENT, OTHER]
+        refundMethod:
+          type: string
+          enum: [ORIGINAL_PAYMENT_METHOD, BANK_TRANSFER]
+
+    RefundResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            refundId:
+              type: string
+              format: uuid
+            refundAmount:
+              type: number
+              format: float
+            refundMethod:
+              type: string
+            estimatedProcessingTime:
+              type: string
+            status:
+              type: string
+              enum: [INITIATED, PROCESSING, COMPLETED, FAILED]
+            message:
+              type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    PaymentMethodsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            creditCards:
+              type: array
+              items:
+                $ref: '#/components/schemas/PaymentMethodInfo'
+            digitalWallets:
+              type: array
+              items:
+                $ref: '#/components/schemas/PaymentMethodInfo'
+            bankTransfers:
+              type: array
+              items:
+                $ref: '#/components/schemas/PaymentMethodInfo'
+            installments:
+              type: array
+              items:
+                $ref: '#/components/schemas/InstallmentOption'
+        timestamp:
+          type: string
+          format: date-time
+
+    PaymentMethodInfo:
+      type: object
+      properties:
+        type:
+          type: string
+        supported:
+          type: boolean
+        maxAmount:
+          type: number
+          format: float
+        fees:
+          type: object
+          properties:
+            percentage:
+              type: number
+              format: float
+            fixedFee:
+              type: number
+              format: float
+        processingTime:
+          type: string
+        supportedBanks:
+          type: array
+          items:
+            type: string
+
+    InstallmentOption:
+      type: object
+      properties:
+        period:
+          type: integer
+        interestRate:
+          type: number
+          format: float
+        minimumAmount:
+          type: number
+          format: float
+
+    # Admin Schemas
+    AdminCustomerListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            customers:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdminCustomerSummary'
+            pagination:
+              $ref: '#/components/schemas/Pagination'
+        timestamp:
+          type: string
+          format: date-time
+
+    AdminCustomerSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        status:
+          type: string
+        kycStatus:
+          type: string
+        totalPolicies:
+          type: integer
+        totalClaims:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        lastLoginAt:
+          type: string
+          format: date-time
+
+    AdminPolicyListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            policies:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdminPolicySummary'
+            pagination:
+              $ref: '#/components/schemas/Pagination'
+        timestamp:
+          type: string
+          format: date-time
+
+    AdminPolicySummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        policyNumber:
+          type: string
+        customerName:
+          type: string
+        vehicleInfo:
+          type: string
+        policyType:
+          type: string
+        premium:
+          type: number
+          format: float
+        status:
+          type: string
+        effectiveDate:
+          type: string
+          format: date
+        expiryDate:
+          type: string
+          format: date
+
+    AdminClaimListResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            claims:
+              type: array
+              items:
+                $ref: '#/components/schemas/AdminClaimSummary'
+            pagination:
+              $ref: '#/components/schemas/Pagination'
+        timestamp:
+          type: string
+          format: date-time
+
+    AdminClaimSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        claimNumber:
+          type: string
+        customerName:
+          type: string
+        policyNumber:
+          type: string
+        incidentType:
+          type: string
+        claimAmount:
+          type: number
+          format: float
+        status:
+          type: string
+        assignedTo:
+          type: string
+        reportedAt:
+          type: string
+          format: date-time
+
+    ReportResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+          properties:
+            reportId:
+              type: string
+              format: uuid
+            reportType:
+              type: string
+            status:
+              type: string
+              enum: [GENERATING, READY, FAILED]
+            downloadUrl:
+              type: string
+              format: uri
+            generatedAt:
+              type: string
+              format: date-time
+            expiryDate:
+              type: string
+              format: date-time
+            message:
+              type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    # Common Schemas
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        hasNext:
+          type: boolean
+        hasPrevious:
+          type: boolean
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              example: "VALIDATION_ERROR"
+            message:
+              type: string
+              example: "Request validation failed"
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field:
+                    type: string
+                  code:
+                    type: string
+                  message:
+                    type: string
+                  messageEn:
+                    type: string
+            timestamp:
+              type: string
+              format: date-time
+            requestId:
+              type: string
+              format: uuid
+            path:
+              type: string
+
+  responses:
+    400BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "VALIDATION_ERROR"
+              message: "Request validation failed"
+              details:
+                - field: "email"
+                  code: "INVALID_FORMAT"
+                  message: "Email format is invalid"
+              timestamp: "2024-12-27T10:30:00Z"
+              requestId: "req-uuid-12345"
+
+    401Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "UNAUTHORIZED"
+              message: "Authentication required"
+              timestamp: "2024-12-27T10:30:00Z"
+
+    403Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "FORBIDDEN"
+              message: "Insufficient permissions"
+              timestamp: "2024-12-27T10:30:00Z"
+
+    404NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "RESOURCE_NOT_FOUND"
+              message: "Requested resource not found"
+              timestamp: "2024-12-27T10:30:00Z"
+
+    409Conflict:
+      description: Conflict
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "CONFLICT"
+              message: "Resource already exists"
+              timestamp: "2024-12-27T10:30:00Z"
+
+    429RateLimit:
+      description: Rate Limit Exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "RATE_LIMIT_EXCEEDED"
+              message: "Too many requests"
+              timestamp: "2024-12-27T10:30:00Z"
+
+    500InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "INTERNAL_SERVER_ERROR"
+              message: "Unexpected server error"
+              timestamp: "2024-12-27T10:30:00Z"

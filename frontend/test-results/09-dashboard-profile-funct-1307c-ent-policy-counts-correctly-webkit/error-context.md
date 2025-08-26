@@ -1,0 +1,87 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - generic [ref=e4]:
+    - button "common.menu" [ref=e5] [cursor=pointer]:
+      - img [ref=e6] [cursor=pointer]: menu
+    - generic [ref=e9] [cursor=pointer]:
+      - img [ref=e10] [cursor=pointer]: directions_car
+      - generic [ref=e11] [cursor=pointer]: Thai Auto Insurance
+    - button "navigation.notifications" [ref=e12] [cursor=pointer]:
+      - img [ref=e13] [cursor=pointer]: notifications
+    - button "common.changeLanguage" [ref=e16] [cursor=pointer]:
+      - img [ref=e17] [cursor=pointer]: translate
+      - generic [ref=e18] [cursor=pointer]: EN
+    - button "user.userMenu" [ref=e21] [cursor=pointer]:
+      - img [ref=e22] [cursor=pointer]: account_circle
+  - generic [ref=e25]:
+    - generic [ref=e28]:
+      - navigation [ref=e29]:
+        - generic [ref=e32] [cursor=pointer]:
+          - img [ref=e33] [cursor=pointer]: dashboard
+          - generic [ref=e34] [cursor=pointer]: Dashboard
+        - generic [ref=e37] [cursor=pointer]:
+          - img [ref=e38] [cursor=pointer]: description
+          - generic [ref=e39] [cursor=pointer]: Policies
+        - generic [ref=e42] [cursor=pointer]:
+          - img [ref=e43] [cursor=pointer]: assignment
+          - generic [ref=e44] [cursor=pointer]: Claims
+        - generic [ref=e47] [cursor=pointer]:
+          - img [ref=e48] [cursor=pointer]: person
+          - generic [ref=e49] [cursor=pointer]: Profile
+        - generic [ref=e52] [cursor=pointer]:
+          - img [ref=e53] [cursor=pointer]: admin_panel_settings
+          - generic [ref=e54] [cursor=pointer]: Admin
+      - generic [ref=e57]: v1.0.0
+    - generic [ref=e62]:
+      - generic [ref=e63]:
+        - heading "Welcome, สมชาย ใจดี!" [level=1] [ref=e64]
+        - paragraph [ref=e65]: Your insurance portal dashboard. Manage your policies, claims, and account information.
+      - generic [ref=e66]:
+        - generic [ref=e69]:
+          - img [ref=e70]: description
+          - generic [ref=e71]:
+            - heading "2" [level=3] [ref=e72]
+            - paragraph [ref=e73]: Active Policies
+        - generic [ref=e76]:
+          - img [ref=e77]: assignment
+          - generic [ref=e78]:
+            - heading "1" [level=3] [ref=e79]
+            - paragraph [ref=e80]: Pending Claims
+        - generic [ref=e83]:
+          - img [ref=e84]: notifications
+          - generic [ref=e85]:
+            - heading "3" [level=3] [ref=e86]
+            - paragraph [ref=e87]: Notifications
+      - generic [ref=e88]:
+        - heading "Quick Actions" [level=2] [ref=e89]
+        - generic [ref=e90]:
+          - button "New Policy" [ref=e91]:
+            - img [ref=e92]: add
+            - generic [ref=e93]: New Policy
+          - button "New Claim" [ref=e96]:
+            - img [ref=e97]: report_problem
+            - generic [ref=e98]: New Claim
+          - button "Profile" [ref=e101]:
+            - img [ref=e102]: person
+            - generic [ref=e103]: Profile
+      - generic [ref=e106]:
+        - heading "Recent Activity" [level=2] [ref=e107]
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - img [ref=e111]: description
+            - generic [ref=e112]:
+              - paragraph [ref=e113]: Policy POL-2024-001 created
+              - paragraph [ref=e114]: 2 hours ago
+          - generic [ref=e115]:
+            - img [ref=e116]: assignment
+            - generic [ref=e117]:
+              - paragraph [ref=e118]: Claim CLM-2024-005 submitted
+              - paragraph [ref=e119]: 1 day ago
+          - generic [ref=e120]:
+            - img [ref=e121]: check_circle
+            - generic [ref=e122]:
+              - paragraph [ref=e123]: Payment processed successfully
+              - paragraph [ref=e124]: 3 days ago
+```
