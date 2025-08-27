@@ -1,80 +1,62 @@
 package com.thaiinsurance.autoinsurance;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureWebMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
- * Base class for integration tests with TestContainers
+ * Base class for integration tests.
+ * Provides complete Spring Boot context with H2 database and web layer.
  */
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@AutoConfigureWebMvc
-@Testcontainers
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK,
+    properties = {
+        "spring.jpa.hibernate.ddl-auto=create-drop",
+        "spring.datasource.url=jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+        "spring.datasource.driver-class-name=org.h2.Driver",
+        "spring.jpa.database-platform=org.hibernate.dialect.H2Dialect", 
+        "spring.jpa.show-sql=false",
+        "spring.jpa.defer-datasource-initialization=false",
+        "spring.sql.init.mode=never",
+        "spring.jpa.properties.hibernate.globally_quoted_identifiers=false",
+        "spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl",
+        "spring.main.allow-bean-definition-overriding=true",
+        "logging.level.org.springframework.security=ERROR",
+        "logging.level.org.springframework.web=ERROR",
+        "logging.level.org.hibernate=ERROR"
+    })
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
-@TestPropertySource(locations = "classpath:application-test.yml")
-@Transactional
 public abstract class BaseIntegrationTest {
 
-    @Container
-    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15-alpine")
-            .withDatabaseName("thai_insurance_test")
-            .withUsername("test_user")
-            .withPassword("test_password")
-            .withExposedPorts(5432);
-
     @Autowired
-    protected WebApplicationContext webApplicationContext;
+    protected MockMvc mockMvc;
 
     @Autowired
     protected ObjectMapper objectMapper;
 
-    protected MockMvc mockMvc;
+    @MockBean
+    protected com.thaiinsurance.autoinsurance.config.DataInitializer dataInitializer;
 
-    @BeforeEach
-    void setUp() {
-        mockMvc = MockMvcBuilders
-                .webAppContextSetup(webApplicationContext)
-                .apply(SecurityMockMvcConfigurers.springSecurity())
-                .build();
+
+    protected String asJsonString(Object obj) {
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to serialize object to JSON", e);
+        }
     }
 
-    /**
-     * Convert object to JSON string
-     */
-    protected String asJsonString(Object obj) throws Exception {
-        return objectMapper.writeValueAsString(obj);
-    }
-
-    /**
-     * Get container JDBC URL for dynamic configuration
-     */
-    static String getJdbcUrl() {
-        return postgreSQLContainer.getJdbcUrl();
-    }
-
-    /**
-     * Get container username
-     */
-    static String getUsername() {
-        return postgreSQLContainer.getUsername();
-    }
-
-    /**
-     * Get container password
-     */
-    static String getPassword() {
-        return postgreSQLContainer.getPassword();
+    protected <T> T fromJsonString(String json, Class<T> clazz) {
+        try {
+            return objectMapper.readValue(json, clazz);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to deserialize JSON to object", e);
+        }
     }
 }

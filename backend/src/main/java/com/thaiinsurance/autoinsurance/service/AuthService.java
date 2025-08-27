@@ -46,6 +46,12 @@ public class AuthService {
         // Validate Thai-specific fields
         validateRegistrationRequest(request);
         
+        // Check if username already exists (if provided separately from email)
+        if (request.getUsername() != null && !request.getUsername().equals(request.getEmail()) 
+            && userRepository.existsByUsername(request.getUsername())) {
+            throw new IllegalArgumentException("Username already exists");
+        }
+        
         // Check if email already exists
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
@@ -64,7 +70,7 @@ public class AuthService {
         try {
             // Create User entity
             User user = new User();
-            user.setUsername(request.getEmail());
+            user.setUsername(request.getUsername() != null ? request.getUsername() : request.getEmail());
             user.setEmail(request.getEmail());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setRole(Role.CUSTOMER);
@@ -87,9 +93,12 @@ public class AuthService {
             customer.setNationalId(request.getNationalId());
             customer.setDateOfBirth(request.getDateOfBirth());
             customer.setGender(Customer.Gender.valueOf(request.getGender()));
-            customer.setPhoneNumber(request.getPhoneNumber());
+            // Convert phone number from international format to local format if needed
+            String localPhoneNumber = request.getPhoneNumber().startsWith("+66") ? 
+                "0" + request.getPhoneNumber().substring(3) : request.getPhoneNumber();
+            customer.setPhoneNumber(localPhoneNumber);
             customer.setEmail(request.getEmail());
-            customer.setPreferredLanguage(Customer.Language.valueOf(request.getPreferredLanguage()));
+            customer.setPreferredLanguage(mapLanguage(request.getPreferredLanguage()));
             customer.setAddress(request.getAddress());
             customer.setTambon(request.getTambon());
             customer.setAmphoe(request.getAmphoe());
@@ -271,5 +280,15 @@ public class AuthService {
     
     private String generatePasswordResetToken() {
         return UUID.randomUUID().toString();
+    }
+    
+    private Customer.Language mapLanguage(String languageCode) {
+        if ("th".equals(languageCode)) {
+            return Customer.Language.THAI;
+        } else if ("en".equals(languageCode)) {
+            return Customer.Language.ENGLISH;
+        } else {
+            throw new IllegalArgumentException("Invalid language code: " + languageCode);
+        }
     }
 }

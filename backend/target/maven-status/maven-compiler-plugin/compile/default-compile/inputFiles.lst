@@ -14,6 +14,7 @@
 /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/main/java/com/thaiinsurance/autoinsurance/controller/TestController.java
 /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/main/java/com/thaiinsurance/autoinsurance/model/Claim.java
 /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/main/java/com/thaiinsurance/autoinsurance/util/NumberGeneratorUtil.java
+/Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/main/java/com/thaiinsurance/autoinsurance/exception/GlobalExceptionHandler.java
 /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/main/java/com/thaiinsurance/autoinsurance/security/JwtAuthenticationFilter.java
 /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/main/java/com/thaiinsurance/autoinsurance/dto/ApiResponse.java
 /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/main/java/com/thaiinsurance/autoinsurance/service/AdminService.java

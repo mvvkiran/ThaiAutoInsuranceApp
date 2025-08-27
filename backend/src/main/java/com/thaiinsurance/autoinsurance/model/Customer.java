@@ -375,10 +375,12 @@ public class Customer extends BaseEntity {
         this.user = user;
     }
     
+    @JsonIgnore
     public String getFullName() {
         return firstName + " " + lastName;
     }
     
+    @JsonIgnore
     public String getFullAddress() {
         StringBuilder address = new StringBuilder();
         if (addressLine1 != null) address.append(addressLine1);

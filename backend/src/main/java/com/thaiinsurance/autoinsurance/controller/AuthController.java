@@ -91,21 +91,29 @@ public class AuthController {
     
     @PostMapping("/refresh")
     @Operation(summary = "Refresh access token", description = "Generate new access token using refresh token")
-    public ResponseEntity<ApiResponse<LoginResponse>> refreshToken(@RequestHeader("Authorization") String refreshToken) {
+    public ResponseEntity<ApiResponse<LoginResponse>> refreshToken(
+            @RequestHeader(value = "Authorization", required = false) String refreshToken) {
+        
+        if (refreshToken == null || refreshToken.trim().isEmpty()) {
+            ApiResponse<LoginResponse> response = new ApiResponse<>(false, "Authorization header is required");
+            return ResponseEntity.badRequest().body(response);
+        }
         
         if (refreshToken.startsWith("Bearer ")) {
             refreshToken = refreshToken.substring(7);
         }
         
         if (!jwtTokenUtil.validateToken(refreshToken) || !jwtTokenUtil.isRefreshToken(refreshToken)) {
-            return ResponseEntity.badRequest().body(ApiResponse.error("Invalid refresh token"));
+            ApiResponse<LoginResponse> response = new ApiResponse<>(false, "Invalid refresh token");
+            return ResponseEntity.badRequest().body(response);
         }
         
         Long userId = jwtTokenUtil.getUserIdFromToken(refreshToken);
         User user = userRepository.findById(userId).orElse(null);
         
         if (user == null || !user.getIsActive()) {
-            return ResponseEntity.badRequest().body(ApiResponse.error("User not found or inactive"));
+            ApiResponse<LoginResponse> response = new ApiResponse<>(false, "User not found or inactive");
+            return ResponseEntity.badRequest().body(response);
         }
         
         UserPrincipal userPrincipal = UserPrincipal.create(user);
@@ -138,7 +146,8 @@ public class AuthController {
     @Operation(summary = "User logout", description = "Logout user (client should discard tokens)")
     public ResponseEntity<ApiResponse<String>> logout() {
         SecurityContextHolder.clearContext();
-        return ResponseEntity.ok(ApiResponse.success("Logged out successfully"));
+        ApiResponse<String> response = new ApiResponse<>(true, "Logout successful");
+        return ResponseEntity.ok(response);
     }
     
     @GetMapping("/me")
@@ -176,10 +185,10 @@ public class AuthController {
                 "Registration successful. Please verify your email and phone number."
             );
             
-            return ResponseEntity.status(201).body(ApiResponse.success("Registration successful", response));
+            return ResponseEntity.status(201).body(ApiResponse.success("User registered successfully", response));
             
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+            return ResponseEntity.badRequest().body(new ApiResponse<>(false, e.getMessage()));
         }
     }
     

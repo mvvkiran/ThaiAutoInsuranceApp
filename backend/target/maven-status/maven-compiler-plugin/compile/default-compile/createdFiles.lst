@@ -26,6 +26,7 @@ com/thaiinsurance/autoinsurance/security/JwtAuthenticationFilter.class
 com/thaiinsurance/autoinsurance/service/PaymentService$PaymentStatistics.class
 com/thaiinsurance/autoinsurance/service/ClaimService$1.class
 com/thaiinsurance/autoinsurance/service/ReportService$PolicyStatusReport.class
+com/thaiinsurance/autoinsurance/dto/PolicyDTO.class
 com/thaiinsurance/autoinsurance/controller/ReportController$CustomerPaymentHistory.class
 com/thaiinsurance/autoinsurance/model/Vehicle$FuelType.class
 com/thaiinsurance/autoinsurance/security/UserPrincipal.class
@@ -51,6 +52,7 @@ com/thaiinsurance/autoinsurance/controller/VehicleController.class
 com/thaiinsurance/autoinsurance/config/OpenApiConfig.class
 com/thaiinsurance/autoinsurance/model/BaseEntity.class
 com/thaiinsurance/autoinsurance/controller/AuthController.class
+com/thaiinsurance/autoinsurance/controller/AdminController.class
 com/thaiinsurance/autoinsurance/dto/ClaimSubmissionRequest.class
 com/thaiinsurance/autoinsurance/security/CustomUserDetailsService.class
 com/thaiinsurance/autoinsurance/dto/auth/LoginResponse.class
@@ -73,6 +75,7 @@ com/thaiinsurance/autoinsurance/util/NumberGeneratorUtil.class
 com/thaiinsurance/autoinsurance/repository/BaseRepository.class
 com/thaiinsurance/autoinsurance/controller/ReportController.class
 com/thaiinsurance/autoinsurance/controller/CustomerController$CustomerWithUserRequest.class
+com/thaiinsurance/autoinsurance/exception/GlobalExceptionHandler.class
 com/thaiinsurance/autoinsurance/controller/TestController.class
 com/thaiinsurance/autoinsurance/controller/AuthController$ForgotPasswordRequest.class
 com/thaiinsurance/autoinsurance/controller/PolicyController$CoverageReport.class
@@ -91,6 +94,7 @@ com/thaiinsurance/autoinsurance/model/Vehicle.class
 com/thaiinsurance/autoinsurance/service/ClaimService.class
 com/thaiinsurance/autoinsurance/repository/ClaimRepository.class
 com/thaiinsurance/autoinsurance/service/NotificationService.class
+com/thaiinsurance/autoinsurance/service/AdminService.class
 com/thaiinsurance/autoinsurance/controller/ReportController$ExportResult.class
 com/thaiinsurance/autoinsurance/controller/PaymentController.class
 com/thaiinsurance/autoinsurance/util/UserCreationVerifier.class

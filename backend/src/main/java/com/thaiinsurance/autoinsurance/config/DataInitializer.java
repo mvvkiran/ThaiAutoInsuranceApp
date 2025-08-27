@@ -107,7 +107,7 @@ public class DataInitializer implements CommandLineRunner {
         logger.info("Creating new admin user with email: {}", adminEmail);
         
         User admin = new User();
-        admin.setUsername("insurance_admin"); // Use different username to avoid conflicts
+        admin.setUsername("admin"); // Standard admin username
         admin.setEmail(adminEmail);
         String encodedPassword = passwordEncoder.encode("Admin@123");
         admin.setPassword(encodedPassword);

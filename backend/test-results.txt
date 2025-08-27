@@ -1,0 +1,286 @@
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/opt/homebrew/Cellar/maven/3.9.11/libexec/lib/guice-5.1.0-classes.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------< com.thaiinsurance:auto-insurance-backend >--------------
+[INFO] Building Thai Auto Insurance Backend 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.3.2:clean (default-clean) @ auto-insurance-backend ---
+[INFO] Deleting /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ auto-insurance-backend ---
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] Copying 5 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.11.0:compile (default-compile) @ auto-insurance-backend ---
+[INFO] Changes detected - recompiling the module! :source
+[INFO] Compiling 59 source files with javac [debug release 17] to target/classes
+[INFO] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/main/java/com/thaiinsurance/autoinsurance/service/ReportService.java: Some input files use or override a deprecated API.
+[INFO] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/main/java/com/thaiinsurance/autoinsurance/service/ReportService.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ auto-insurance-backend ---
+[INFO] Copying 3 resources from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.11.0:testCompile (default-testCompile) @ auto-insurance-backend ---
+[INFO] Changes detected - recompiling the module! :dependency
+[INFO] Compiling 15 source files with javac [debug release 17] to target/test-classes
+[INFO] Some messages have been simplified; recompile with -Xdiags:verbose to get full output
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[21,44] package org.springframework.test.context.sql does not exist
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[62,13] cannot find symbol
+  symbol:   class AuthService
+  location: class com.thaiinsurance.autoinsurance.unit.controller.AuthControllerTest
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[126,51] cannot find symbol
+  symbol:   variable CAR
+  location: class com.thaiinsurance.autoinsurance.model.Vehicle.VehicleType
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[135,16] cannot find symbol
+  symbol:   method setPurchaseDate(java.time.LocalDate)
+  location: variable vehicle of type com.thaiinsurance.autoinsurance.model.Vehicle
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[136,16] cannot find symbol
+  symbol:   method setPurchasePrice(double)
+  location: variable vehicle of type com.thaiinsurance.autoinsurance.model.Vehicle
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[137,16] cannot find symbol
+  symbol:   method setCurrentValue(double)
+  location: variable vehicle of type com.thaiinsurance.autoinsurance.model.Vehicle
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[138,47] cannot find symbol
+  symbol:   variable PERSONAL
+  location: class com.thaiinsurance.autoinsurance.model.Vehicle.UsageType
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[139,16] cannot find symbol
+  symbol:   method setIsFinanced(boolean)
+  location: variable vehicle of type com.thaiinsurance.autoinsurance.model.Vehicle
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[151,47] cannot find symbol
+  symbol:   variable COMPREHENSIVE
+  location: class com.thaiinsurance.autoinsurance.model.Policy.PolicyType
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[152,51] cannot find symbol
+  symbol:   variable FIRST_CLASS
+  location: class com.thaiinsurance.autoinsurance.model.Policy.CoverageType
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[155,33] incompatible types: double cannot be converted to java.math.BigDecimal
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[156,30] incompatible types: double cannot be converted to java.math.BigDecimal
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[157,30] incompatible types: double cannot be converted to java.math.BigDecimal
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[158,15] cannot find symbol
+  symbol:   method setPolicyStatus(com.thaiinsurance.autoinsurance.model.Policy.PolicyStatus)
+  location: variable policy of type com.thaiinsurance.autoinsurance.model.Policy
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[159,42] cannot find symbol
+  symbol:   variable PaymentFrequency
+  location: class com.thaiinsurance.autoinsurance.model.Policy
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[171,33] cannot find symbol
+  symbol:   variable ClaimType
+  location: class com.thaiinsurance.autoinsurance.model.Claim
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[175,14] cannot find symbol
+  symbol:   method setDescription(java.lang.String)
+  location: variable claim of type com.thaiinsurance.autoinsurance.model.Claim
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[176,34] incompatible types: double cannot be converted to java.math.BigDecimal
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[177,14] cannot find symbol
+  symbol:   method setClaimStatus(com.thaiinsurance.autoinsurance.model.Claim.ClaimStatus)
+  location: variable claim of type com.thaiinsurance.autoinsurance.model.Claim
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[189,27] incompatible types: double cannot be converted to java.math.BigDecimal
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[190,45] incompatible types: java.time.LocalDate cannot be converted to java.time.LocalDateTime
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[193,16] cannot find symbol
+  symbol:   method setPaymentStatus(com.thaiinsurance.autoinsurance.model.Payment.PaymentStatus)
+  location: variable payment of type com.thaiinsurance.autoinsurance.model.Payment
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[194,16] cannot find symbol
+  symbol:   method setDescription(java.lang.String)
+  location: variable payment of type com.thaiinsurance.autoinsurance.model.Payment
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[194,21] cannot find symbol
+  symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+  location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[273,21] cannot find symbol
+  symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+  location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[345,21] cannot find symbol
+  symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+  location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[475,21] cannot find symbol
+  symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+  location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[492,21] cannot find symbol
+  symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+  location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[508,21] cannot find symbol
+  symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+  location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[531,21] cannot find symbol
+  symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+  location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[565,21] cannot find symbol
+  symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+  location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[58,17] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[162,81] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[209,89] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[249,22] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[252,86] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[271,22] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[274,86] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[285,89] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[304,22] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[307,86] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[321,22] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[324,86] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[343,26] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[346,86] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[546,81] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[72,18] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[74,87] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[84,18] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[86,87] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[96,21] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[98,90] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[80,30] cannot find symbol
+  symbol:   method setUserId(long)
+  location: variable expectedLoginResponse of type com.thaiinsurance.autoinsurance.dto.auth.LoginResponse
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[81,30] cannot find symbol
+  symbol:   method setUsername(java.lang.String)
+  location: variable expectedLoginResponse of type com.thaiinsurance.autoinsurance.dto.auth.LoginResponse
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[82,30] cannot find symbol
+  symbol:   method setEmail(java.lang.String)
+  location: variable expectedLoginResponse of type com.thaiinsurance.autoinsurance.dto.auth.LoginResponse
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[179,42] incompatible types: inference variable T has incompatible bounds
+    equality constraints: com.thaiinsurance.autoinsurance.security.UserPrincipal
+    upper bounds: org.springframework.security.core.Authentication,java.lang.Object
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[289,30] incompatible types: inference variable T has incompatible bounds
+    equality constraints: com.thaiinsurance.autoinsurance.security.UserPrincipal
+    upper bounds: org.springframework.security.core.Authentication,java.lang.Object
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[290,30] incompatible types: inference variable T has incompatible bounds
+    equality constraints: com.thaiinsurance.autoinsurance.security.UserPrincipal
+    upper bounds: org.springframework.security.core.Authentication,java.lang.Object
+[INFO] 58 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  1.635 s
+[INFO] Finished at: 2025-08-27T07:56:22+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.11.0:testCompile (default-testCompile) on project auto-insurance-backend: Compilation failure: Compilation failure: 
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[21,44] package org.springframework.test.context.sql does not exist
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[62,13] cannot find symbol
+[ERROR]   symbol:   class AuthService
+[ERROR]   location: class com.thaiinsurance.autoinsurance.unit.controller.AuthControllerTest
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[126,51] cannot find symbol
+[ERROR]   symbol:   variable CAR
+[ERROR]   location: class com.thaiinsurance.autoinsurance.model.Vehicle.VehicleType
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[135,16] cannot find symbol
+[ERROR]   symbol:   method setPurchaseDate(java.time.LocalDate)
+[ERROR]   location: variable vehicle of type com.thaiinsurance.autoinsurance.model.Vehicle
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[136,16] cannot find symbol
+[ERROR]   symbol:   method setPurchasePrice(double)
+[ERROR]   location: variable vehicle of type com.thaiinsurance.autoinsurance.model.Vehicle
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[137,16] cannot find symbol
+[ERROR]   symbol:   method setCurrentValue(double)
+[ERROR]   location: variable vehicle of type com.thaiinsurance.autoinsurance.model.Vehicle
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[138,47] cannot find symbol
+[ERROR]   symbol:   variable PERSONAL
+[ERROR]   location: class com.thaiinsurance.autoinsurance.model.Vehicle.UsageType
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[139,16] cannot find symbol
+[ERROR]   symbol:   method setIsFinanced(boolean)
+[ERROR]   location: variable vehicle of type com.thaiinsurance.autoinsurance.model.Vehicle
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[151,47] cannot find symbol
+[ERROR]   symbol:   variable COMPREHENSIVE
+[ERROR]   location: class com.thaiinsurance.autoinsurance.model.Policy.PolicyType
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[152,51] cannot find symbol
+[ERROR]   symbol:   variable FIRST_CLASS
+[ERROR]   location: class com.thaiinsurance.autoinsurance.model.Policy.CoverageType
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[155,33] incompatible types: double cannot be converted to java.math.BigDecimal
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[156,30] incompatible types: double cannot be converted to java.math.BigDecimal
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[157,30] incompatible types: double cannot be converted to java.math.BigDecimal
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[158,15] cannot find symbol
+[ERROR]   symbol:   method setPolicyStatus(com.thaiinsurance.autoinsurance.model.Policy.PolicyStatus)
+[ERROR]   location: variable policy of type com.thaiinsurance.autoinsurance.model.Policy
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[159,42] cannot find symbol
+[ERROR]   symbol:   variable PaymentFrequency
+[ERROR]   location: class com.thaiinsurance.autoinsurance.model.Policy
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[171,33] cannot find symbol
+[ERROR]   symbol:   variable ClaimType
+[ERROR]   location: class com.thaiinsurance.autoinsurance.model.Claim
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[175,14] cannot find symbol
+[ERROR]   symbol:   method setDescription(java.lang.String)
+[ERROR]   location: variable claim of type com.thaiinsurance.autoinsurance.model.Claim
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[176,34] incompatible types: double cannot be converted to java.math.BigDecimal
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[177,14] cannot find symbol
+[ERROR]   symbol:   method setClaimStatus(com.thaiinsurance.autoinsurance.model.Claim.ClaimStatus)
+[ERROR]   location: variable claim of type com.thaiinsurance.autoinsurance.model.Claim
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[189,27] incompatible types: double cannot be converted to java.math.BigDecimal
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[190,45] incompatible types: java.time.LocalDate cannot be converted to java.time.LocalDateTime
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[193,16] cannot find symbol
+[ERROR]   symbol:   method setPaymentStatus(com.thaiinsurance.autoinsurance.model.Payment.PaymentStatus)
+[ERROR]   location: variable payment of type com.thaiinsurance.autoinsurance.model.Payment
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/TestDataHelper.java:[194,16] cannot find symbol
+[ERROR]   symbol:   method setDescription(java.lang.String)
+[ERROR]   location: variable payment of type com.thaiinsurance.autoinsurance.model.Payment
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[194,21] cannot find symbol
+[ERROR]   symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+[ERROR]   location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[273,21] cannot find symbol
+[ERROR]   symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+[ERROR]   location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[345,21] cannot find symbol
+[ERROR]   symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+[ERROR]   location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[475,21] cannot find symbol
+[ERROR]   symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+[ERROR]   location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[492,21] cannot find symbol
+[ERROR]   symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+[ERROR]   location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[508,21] cannot find symbol
+[ERROR]   symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+[ERROR]   location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[531,21] cannot find symbol
+[ERROR]   symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+[ERROR]   location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/CustomerControllerTest.java:[565,21] cannot find symbol
+[ERROR]   symbol:   method andExpected(org.springframework.test.web.servlet.ResultMatcher)
+[ERROR]   location: interface org.springframework.test.web.servlet.ResultActions
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[58,17] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[162,81] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[209,89] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[249,22] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[252,86] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[271,22] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[274,86] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[285,89] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[304,22] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[307,86] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[321,22] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[324,86] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[343,26] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[346,86] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/security/SecurityIntegrationTest.java:[546,81] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[72,18] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[74,87] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[84,18] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[86,87] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[96,21] incompatible types: no instance(s) of type variable(s) E exist so that java.util.Set<E> conforms to java.util.List<com.thaiinsurance.autoinsurance.model.Role>
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/integration/api/CustomerAPIIntegrationTest.java:[98,90] incompatible types: com.thaiinsurance.autoinsurance.security.UserPrincipal cannot be converted to org.springframework.security.core.Authentication
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[80,30] cannot find symbol
+[ERROR]   symbol:   method setUserId(long)
+[ERROR]   location: variable expectedLoginResponse of type com.thaiinsurance.autoinsurance.dto.auth.LoginResponse
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[81,30] cannot find symbol
+[ERROR]   symbol:   method setUsername(java.lang.String)
+[ERROR]   location: variable expectedLoginResponse of type com.thaiinsurance.autoinsurance.dto.auth.LoginResponse
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[82,30] cannot find symbol
+[ERROR]   symbol:   method setEmail(java.lang.String)
+[ERROR]   location: variable expectedLoginResponse of type com.thaiinsurance.autoinsurance.dto.auth.LoginResponse
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[179,42] incompatible types: inference variable T has incompatible bounds
+[ERROR]     equality constraints: com.thaiinsurance.autoinsurance.security.UserPrincipal
+[ERROR]     upper bounds: org.springframework.security.core.Authentication,java.lang.Object
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[289,30] incompatible types: inference variable T has incompatible bounds
+[ERROR]     equality constraints: com.thaiinsurance.autoinsurance.security.UserPrincipal
+[ERROR]     upper bounds: org.springframework.security.core.Authentication,java.lang.Object
+[ERROR] /Users/mvvkiran/Workspace/Angular/auto-insurance-app/backend/src/test/java/com/thaiinsurance/autoinsurance/unit/controller/AuthControllerTest.java:[290,30] incompatible types: inference variable T has incompatible bounds
+[ERROR]     equality constraints: com.thaiinsurance.autoinsurance.security.UserPrincipal
+[ERROR]     upper bounds: org.springframework.security.core.Authentication,java.lang.Object
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

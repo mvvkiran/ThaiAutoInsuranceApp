@@ -1,6 +1,7 @@
 package com.thaiinsurance.autoinsurance;
 
 import com.thaiinsurance.autoinsurance.model.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -123,7 +124,7 @@ public class TestDataHelper {
     public static Vehicle createValidVehicle() {
         Vehicle vehicle = new Vehicle();
         vehicle.setLicensePlate(VALID_LICENSE_PLATES[0]);
-        vehicle.setVehicleType(Vehicle.VehicleType.CAR);
+        vehicle.setVehicleType(Vehicle.VehicleType.SEDAN);
         vehicle.setMake("Toyota");
         vehicle.setModel("Vios");
         vehicle.setYear(2020);
@@ -132,11 +133,9 @@ public class TestDataHelper {
         vehicle.setColor("White");
         vehicle.setChassisNumber("JTDBR32E500123456");
         vehicle.setEngineNumber("NZ12345678");
-        vehicle.setPurchaseDate(LocalDate.of(2020, 1, 15));
-        vehicle.setPurchasePrice(550000.0);
-        vehicle.setCurrentValue(480000.0);
-        vehicle.setUsageType(Vehicle.UsageType.PERSONAL);
-        vehicle.setIsFinanced(false);
+        vehicle.setRegistrationDate(LocalDate.of(2020, 1, 15));
+        vehicle.setUsageType(Vehicle.UsageType.PRIVATE);
+        vehicle.setIsActive(true);
         vehicle.setCreatedAt(LocalDateTime.now());
         vehicle.setUpdatedAt(LocalDateTime.now());
         return vehicle;
@@ -148,15 +147,14 @@ public class TestDataHelper {
     public static Policy createValidPolicy() {
         Policy policy = new Policy();
         policy.setPolicyNumber("POL-TEST-001");
-        policy.setPolicyType(Policy.PolicyType.COMPREHENSIVE);
-        policy.setCoverageType(Policy.CoverageType.FIRST_CLASS);
+        policy.setPolicyType(Policy.PolicyType.VOLUNTARY);
+        policy.setCoverageType(Policy.CoverageType.COMPREHENSIVE);
         policy.setStartDate(LocalDate.now());
         policy.setEndDate(LocalDate.now().plusYears(1));
-        policy.setPremiumAmount(15000.0);
-        policy.setSumInsured(550000.0);
-        policy.setDeductible(5000.0);
-        policy.setPolicyStatus(Policy.PolicyStatus.ACTIVE);
-        policy.setPaymentFrequency(Policy.PaymentFrequency.ANNUAL);
+        policy.setPremiumAmount(new BigDecimal("15000.00"));
+        policy.setSumInsured(new BigDecimal("550000.00"));
+        policy.setDeductible(new BigDecimal("5000.00"));
+        policy.setStatus(Policy.PolicyStatus.ACTIVE);
         policy.setCreatedAt(LocalDateTime.now());
         policy.setUpdatedAt(LocalDateTime.now());
         return policy;
@@ -168,13 +166,13 @@ public class TestDataHelper {
     public static Claim createValidClaim() {
         Claim claim = new Claim();
         claim.setClaimNumber("CLM-TEST-001");
-        claim.setClaimType(Claim.ClaimType.ACCIDENT);
+        claim.setIncidentType(Claim.IncidentType.COLLISION);
         claim.setIncidentDate(LocalDate.now().minusDays(5));
         claim.setReportedDate(LocalDate.now().minusDays(4));
         claim.setIncidentLocation("Sukhumvit Road, Bangkok");
-        claim.setDescription("Minor collision with another vehicle");
-        claim.setEstimatedAmount(25000.0);
-        claim.setClaimStatus(Claim.ClaimStatus.SUBMITTED);
+        claim.setIncidentDescription("Minor collision with another vehicle");
+        claim.setEstimatedAmount(new BigDecimal("25000.00"));
+        claim.setStatus(Claim.ClaimStatus.SUBMITTED);
         claim.setCreatedAt(LocalDateTime.now());
         claim.setUpdatedAt(LocalDateTime.now());
         return claim;
@@ -186,12 +184,11 @@ public class TestDataHelper {
     public static Payment createValidPayment() {
         Payment payment = new Payment();
         payment.setPaymentReference("PAY-TEST-001");
-        payment.setAmount(15000.0);
-        payment.setPaymentDate(LocalDate.now());
+        payment.setAmount(new BigDecimal("15000.00"));
+        payment.setPaymentDate(LocalDateTime.now());
         payment.setDueDate(LocalDate.now().plusDays(15));
         payment.setPaymentMethod(Payment.PaymentMethod.BANK_TRANSFER);
-        payment.setPaymentStatus(Payment.PaymentStatus.COMPLETED);
-        payment.setDescription("Annual premium payment");
+        payment.setStatus(Payment.PaymentStatus.COMPLETED);
         payment.setCreatedAt(LocalDateTime.now());
         payment.setUpdatedAt(LocalDateTime.now());
         return payment;

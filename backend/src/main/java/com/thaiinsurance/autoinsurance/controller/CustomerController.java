@@ -88,8 +88,14 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(ApiResponse.success("Customer created successfully", createdCustomer));
         } catch (IllegalArgumentException e) {
+            // Check if it's a duplicate data error (should return 409 Conflict)
+            if (e.getMessage().contains("already exists")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(ApiResponse.error("Duplicate data", e.getMessage()));
+            }
+            // For validation errors, return the specific error message (not "Validation failed")
             return ResponseEntity.badRequest()
-                    .body(ApiResponse.error("Validation failed", e.getMessage()));
+                    .body(ApiResponse.error(e.getMessage(), e.getMessage()));
         }
     }
     
@@ -107,8 +113,14 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(ApiResponse.success("Customer with user account created successfully", createdCustomer));
         } catch (IllegalArgumentException e) {
+            // Check if it's a duplicate data error (should return 409 Conflict)
+            if (e.getMessage().contains("already exists")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(ApiResponse.error("Duplicate data", e.getMessage()));
+            }
+            // For validation errors, return the specific error message (not "Validation failed")
             return ResponseEntity.badRequest()
-                    .body(ApiResponse.error("Validation failed", e.getMessage()));
+                    .body(ApiResponse.error(e.getMessage(), e.getMessage()));
         }
     }
     
@@ -121,6 +133,16 @@ public class CustomerController {
             Customer updatedCustomer = customerService.updateCustomer(id, customer);
             return ResponseEntity.ok(ApiResponse.success("Customer updated successfully", updatedCustomer));
         } catch (IllegalArgumentException e) {
+            // Check if it's a "not found" error
+            if (e.getMessage().contains("not found")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponse.error("Customer not found", e.getMessage()));
+            }
+            // Check if it's a duplicate data error (should return 409 Conflict)
+            if (e.getMessage().contains("already exists")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body(ApiResponse.error("Duplicate data", e.getMessage()));
+            }
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("Update failed", e.getMessage()));
         }
@@ -134,6 +156,11 @@ public class CustomerController {
             customerService.deleteCustomer(id);
             return ResponseEntity.ok(ApiResponse.success("Customer deleted successfully"));
         } catch (IllegalArgumentException e) {
+            // Check if it's a "not found" error
+            if (e.getMessage().contains("not found")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponse.error("Customer not found", e.getMessage()));
+            }
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("Delete failed", e.getMessage()));
         }
@@ -148,6 +175,11 @@ public class CustomerController {
             Customer updatedCustomer = customerService.updateKycStatus(id, request.getStatus());
             return ResponseEntity.ok(ApiResponse.success("KYC status updated successfully", updatedCustomer));
         } catch (IllegalArgumentException e) {
+            // Check if it's a "not found" error
+            if (e.getMessage().contains("not found")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponse.error("Customer not found", e.getMessage()));
+            }
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error("Update failed", e.getMessage()));
         }

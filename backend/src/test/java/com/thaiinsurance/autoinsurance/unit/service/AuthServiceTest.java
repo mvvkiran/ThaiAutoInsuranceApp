@@ -300,7 +300,7 @@ class AuthServiceTest {
         request.setLastName("ใจดี");
         request.setFirstNameEn("Somsai");
         request.setLastNameEn("Jaidee");
-        request.setNationalId("1234567890123");
+        request.setNationalId("1101700207366"); // Using valid Thai National ID from TestDataHelper
         request.setDateOfBirth(LocalDate.of(1990, 1, 1));
         request.setGender("MALE");
         request.setEmail("somsai.jaidee@example.com");
